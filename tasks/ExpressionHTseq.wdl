@@ -1,0 +1,1 @@
+/u/flashscratch/k/katiecam/miniconda2/bin/htseq-count --format bam --order pos --mode intersection-strict --stranded reverse --minaqual 1 --type exon --idattr gene_id ${OUT}/alignment/${sample}_FINAL.bam ${GTF} > ${OUT}/results/${sample_FINAL}_HTseqCounts.tsv
