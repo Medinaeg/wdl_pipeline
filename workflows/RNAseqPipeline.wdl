@@ -7,22 +7,38 @@
 ## - One or more read groups, all belonging to a single sample
 ## - FASTQ files must be paired using Illumina naming properties (https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/NamingConvention_FASTQ-files-swBS.htm)
 
-# WORKFLOW DEFINITIONN
+# Local import
+import "../tasks/FindFASTQs.wdl" as FindFiles
+import "../tasks/AlignmentHisat2.wdl" as ToBam
+import "../tasks/MergeSampleBams.wdl" as MergedBam
+import "../tasks/ExpressionStringtie.wdl", as StringtieExpression
+import "../tasks/ExpressionHTseq.wdl" as HTseqExpression
+import "../tasks/ExpressionKallisto.wdl" as KallistoQuant
+import "../tasks/FusionPizzly.wdl" as PizzlyFusion
+import "../structs/RNAseqStructs.wdl"
+
+
+# WORKFLOW DEFINITION
 workflow rnaseq_workflow {
+  input {
+    ReferenceFasta references
 
-   String data_directory
-   String output_directory
+    String data_directory
+    String output_directory
 
-   File adapters
-   String adapter_trim_end
-   Int adapter_min_overlap
-   Int max_uncalled
+    String? strandness
+   }
 
-   String hisat_index
-   File reference_gtf
+   call FindFiles.GetFASTQs {
 
-   File kallisto_index
-   
+   }
+
+   call ToBam.AlignmentHisat2 {
+    input:
+      references = references,
+
+
+   }
 
    # Outputs that will be retained when execution is complete
    output {
@@ -31,9 +47,9 @@ workflow rnaseq_workflow {
 
       File? agg_alignment_summary_metrics = CollectAggregationMetrics.alignment_summary_metrics
 
-      File output_cram = ConnvertToCram.output_cram
+      File output_cram = ConvertToCram.output_cram
       File output_cram_index = ConvertToCram.output_cram_index
-      File output_cram_md5 = ConnvertToCram.output_cram_md5
+      File output_cram_md5 = ConvertToCram.output_cram_md5
 
       File validate_cram_file_report = ValidateCram.report
 
@@ -42,24 +58,3 @@ workflow rnaseq_workflow {
       File output_pizzly_fusion = PizzlyFusion.output_pizzly_fusion
    }
 }
-
-if [ "${STRANDNESS}" == "NA" ]; then
-   echo hisat2 -x ${HISAT} --rg-id ${id} --rg PL:ILLUMINA --rg PU:${sample} --rg LB:${id}.${sm} --rg SM:${sample} ${files} -S ${OUT}/alignment/${sample}/align.sam
-   hisat2 -x ${HISAT} --rg-id ${id} --rg PL:ILLUMINA --rg PU:${sample} --rg LB:${id}.${sm} --rg SM:${sample} ${files} -S ${OUT}/alignment/${sample}/align.sam
-else
-   echo hisat2 -x ${HISAT} --rg-id ${id} --rg PL:ILLUMINA --rg PU:${sample} --rg LB:${id}.${sm} --rg SM:${sample} --rna-strandness ${STRANDNESS} ${files} -S ${OUT}/alignment/${sample}/align.sam
-   hisat2 -x ${HISAT} --rg-id ${id} --rg PL:ILLUMINA --rg PU:${sample} --rg LB:${id}.${sm} --rg SM:${sample} --rna-strandness ${STRANDNESS} ${files} -S ${OUT}/alignment/${sample}/align.sam
-fi
-echo samtools view -Sb -o ${OUT}/alignment/${sample}/align.bam ${OUT}/alignment/${sample}/align.sam
-samtools view -Sb -o ${OUT}/alignment/${sample}/align.bam ${OUT}/alignment/${sample}/align.sam
-# All intermediate files stay in a subdirectory until the final file.
-echo samtools sort -o ${OUT}/alignment/${sample}_FINAL.bam ${OUT}/alignment/${sample}/align.bam
-samtools sort -o ${OUT}/alignment/${sample}_FINAL.bam ${OUT}/alignment/${sample}/align.bam
-rm ${OUT}/alignment/${sample}/align.bam
-/u/flashscratch/k/katiecam/software/stringtie-1.3.5/stringtie -G ${GTF} -e -B -o ${OUT}/results/${sample}_transcripts.gtf -A ${OUT}/results/${sample}_abundances.tsv ${OUT}/alignment/${sample}_FINAL.bam
-
-/u/flashscratch/k/katiecam/miniconda2/bin/htseq-count --format bam --order pos --mode intersection-strict --stranded reverse --minaqual 1 --type exon --idattr gene_id ${OUT}/alignment/${sample}_FINAL.bam ${GTF} > ${OUT}/results/${sample_FINAL}_HTseqCounts.tsv
-
-/u/flashscratch/k/katiecam/miniconda2/bin/kallisto quant -i ${KALLISTO} -b 100 --fusion -o ${OUT}/results/${sample} ${files}
-
-/u/flashscratch/k/katiecam/miniconda2/bin/pizzly -k 31 --gtf ${GTF} --align-score 2 --insert-size 400 --fasta ${CDNA} --output ${OUT}/results/${sample}/pizzly ${OUT}/results/${sample}/fusion.txt

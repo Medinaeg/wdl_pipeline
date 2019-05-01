@@ -1,0 +1,1 @@
+/u/flashscratch/k/katiecam/software/stringtie-1.3.5/stringtie -G ${GTF} -e -B -o ${OUT}/results/${sample}_transcripts.gtf -A ${OUT}/results/${sample}_abundances.tsv ${OUT}/alignment/${sample}_FINAL.bam
