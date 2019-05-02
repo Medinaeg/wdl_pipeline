@@ -4,57 +4,44 @@
 ## all expression values are aggregated into matrices for downstream analysis.
 ##
 ## Requirements/expectations :
-## - One or more read groups, all belonging to a single sample
-## - FASTQ files must be paired using Illumina naming properties (https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/NamingConvention_FASTQ-files-swBS.htm)
+## - 3-column tab-delimited file, with the following format:
+## -- Column 1. Sample name
+## -- Column 2. Read 1 FASTQ file
+## -- Column 3. Read 2 FASTQ file (Leave blank if reads are unpaired)
+##
 
 # Local import
-import "../tasks/FindFASTQs.wdl" as FindFiles
-import "../tasks/AlignmentHisat2.wdl" as ToBam
-import "../tasks/MergeSampleBams.wdl" as MergedBam
-import "../tasks/ExpressionStringtie.wdl", as StringtieExpression
-import "../tasks/ExpressionHTseq.wdl" as HTseqExpression
-import "../tasks/ExpressionKallisto.wdl" as KallistoQuant
-import "../tasks/FusionPizzly.wdl" as PizzlyFusion
+import "../tasks/AlignmentHisat2.wdl" as FastqToAlignedBam
 import "../structs/RNAseqStructs.wdl"
 
 
 # WORKFLOW DEFINITION
 workflow rnaseq_workflow {
   input {
-    ReferenceFasta references
+    File fofn # file of file names
 
-    String data_directory
-    String output_directory
+    ReferenceFasta references
 
     String? strandness
    }
 
-   call FindFiles.GetFASTQs {
+   # TODO: Implement QC - Find files
+   # Read in FOFN to get sample:fastq mapping
+   Array[Array[String]] inputSamples = read_tsv(fofn)
 
-   }
-
-   call ToBam.AlignmentHisat2 {
-    input:
-      references = references,
-
-
+   # Run alignments on all samples
+   scatter (sample in inputSamples) {
+    call FastqToAlignedBam.Hisat2Alignment {
+      input:
+        sampleName = inputSamples[0],
+        fastq1 = inputSamples[1],
+        fastq2 = inputSamples[2],
+        strandness = strandness
+    }
    }
 
    # Outputs that will be retained when execution is complete
    output {
-      Array[File?] quality_yield_metrics = CollectQualityYieldMetrics.quality_yield_metrics
-      File? read_group_alignment_summary_metrics = CollectReadgroupBamQualityMetrics.alignment_summary_metrics
 
-      File? agg_alignment_summary_metrics = CollectAggregationMetrics.alignment_summary_metrics
-
-      File output_cram = ConvertToCram.output_cram
-      File output_cram_index = ConvertToCram.output_cram_index
-      File output_cram_md5 = ConvertToCram.output_cram_md5
-
-      File validate_cram_file_report = ValidateCram.report
-
-      File output_stringtie_expression = StringtieExpression.output_stringtie_expression
-      File output_kallisto_quant = KallistoQuant.output_kallisto_quant
-      File output_pizzly_fusion = PizzlyFusion.output_pizzly_fusion
    }
 }
