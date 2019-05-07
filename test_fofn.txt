@@ -1,0 +1,1 @@
+S10295897_S18	gs://trial-cmp001/10295897_S18_R1_001.fastq.gz	gs://trial-cmp001/10295897_S18_R2_001.fastq.gz
