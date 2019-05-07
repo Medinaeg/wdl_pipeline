@@ -6,13 +6,13 @@ workflow SamToBAM{
         File samFile
         String outdir
     }
-    call ToBam as ToBam {
+    call ToBam {
         input:
             sample = sample,
             samFile = samFile,
             outdir = outdir
     }
-    call SortBam as SortBam {
+    call SortBam {
         input:
             sample = sample,
             alignedBam = ToBam.alignedBam,

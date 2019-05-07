@@ -10,7 +10,7 @@ workflow runAlignments {
         File hisatIndex
     }
 
-    call getReadInfo as getReadInfo {
+    call getReadInfo {
         input:
             sample = sample,
             fastq1 = fastq1
@@ -20,8 +20,6 @@ workflow runAlignments {
         input:
             outdir = outdir,
             sample = sample,
-#            fastq1 = fastq1,
-#            fastq2 = fastq2,
             files = if fastq2=="NA" then "-U fastq1" else "-1 fastq1 -2 fastq2",
             hisatIndex = hisatIndex,
             strandness = strandness,
@@ -66,12 +64,6 @@ task hisatCommand {
         String sm
     }
 
-#    if ( fastq2 == "NA" ) then
-#        String files = "-U ~{fastq1}"
-#    else
-#        String files = "-1 ~{fastq1} -2 ~{fastq2}"
-#    fi
-
     command <<<
         if [ ~{strandness} == "NA" ]; then
             /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} ~{files} -S ~{outdir}/alignment/~{sample}.align.sam
@@ -81,7 +73,7 @@ task hisatCommand {
     >>>
 
      output{
-         File samFile =  "~{outdir}/alignment/{sample}.align.sam"
+         File samFile =  "~{outdir}/alignment/~{sample}.align.sam"
      }
 
     runtime {

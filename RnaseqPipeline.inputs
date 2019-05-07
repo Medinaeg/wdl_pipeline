@@ -3,7 +3,7 @@
   "myWorkflow.reference_gtf": "gs://reference-data1/Homo_sapiens.GRCh38.94.gtf",
   "myWorkflow.outdir": "gs://trial-cmp001/results",
   "myWorkflow.hisat_index": "gs://reference-data1/hisat2/GRCh38_HISAT",
-  "myWorkflow.fofn": "gs://trial-cmp001/test_fofn.txt",
+  "myWorkflow.fofn": "gs://trial-cmp001/fastq_files/test_fofn.txt",
   "myWorkflow.strandness": "RF",
   "myWorkflow.kallisto_index": "gs://reference-data1/Homo_sapiens.GRCh38_94.cdna.all.kallisto.index"
 }

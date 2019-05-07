@@ -3,14 +3,14 @@ version 1.0
 ##TODO: Add Fastq2 NA if needed/does not exist
 #import "./tasks/HisatAlignment.wdl" as Hisat
 #import "./tasks/SamToBam.wdl" as SamToBam
-#import "./tasks/HTSEq2version2.wdl" as HTseq
+#import "./tasks/HTSeq2version2.wdl" as HTseq
 #import "./tasks/Stringtie.wdl" as Stringtie
 #import "./tasks/Kallisto.wdl" as Kallisto
 #import "./tasks/Pizzly.wdl" as Pizzly
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/HisatAlignment.wdl" as Hisat
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/SamToBam.wdl" as SamToBam
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/HTSEq2version2.wdl" as HTseq
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/HTSeq2version2.wdl" as HTseq
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Stringtie.wdl" as Stringtie
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
