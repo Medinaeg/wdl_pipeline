@@ -20,7 +20,8 @@ workflow runAlignments {
         input:
             outdir = outdir,
             sample = sample,
-            files = if fastq2=="NA" then "-U fastq1" else "-1 fastq1 -2 fastq2",
+            fastq1 = fastq1,
+            fastq2 = fastq2,
             hisatIndex = hisatIndex,
             strandness = strandness,
             id = getReadInfo.FastqInfo[0],
@@ -56,7 +57,8 @@ task hisatCommand {
     input {
         String outdir
         String sample
-        String files
+        File fastq1
+        File fastq2
         String hisatIndex
         String strandness
         String id
@@ -66,9 +68,9 @@ task hisatCommand {
 
     command <<<
         if [ ~{strandness} == "NA" ]; then
-            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} ~{files} -S ~{outdir}/alignment/~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{outdir}/alignment/~{sample}.align.sam
         else
-            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} ~{files} -S ~{outdir}/alignment/~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{outdir}/alignment/~{sample}.align.sam
         fi
     >>>
 
