@@ -7,7 +7,7 @@ workflow runAlignments {
         File fastq1
         File fastq2
         String strandness
-        File hisatIndex
+        String hisatIndex
     }
 
     call getReadInfo {
@@ -57,7 +57,7 @@ task hisatCommand {
         String outdir
         String sample
         String files
-        File hisatIndex
+        String hisatIndex
         String strandness
         String id
         String pu
