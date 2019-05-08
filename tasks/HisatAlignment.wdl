@@ -2,12 +2,11 @@ version 1.0
 
 workflow runAlignments {
     input {
-        String outdir
         String sample
         File fastq1
         File fastq2
         String strandness
-        String hisatIndex
+        File hisatIndex
     }
 
     call getReadInfo {
@@ -18,7 +17,6 @@ workflow runAlignments {
 
     call hisatCommand {
         input:
-            outdir = outdir,
             sample = sample,
             fastq1 = fastq1,
             fastq2 = fastq2,
@@ -31,10 +29,9 @@ workflow runAlignments {
     }
 
     output {
-        File samFile = hisatCommand.samFile
+        File bamFile = hisatCommand.bamFile
     }
 }
-
 
 task getReadInfo {
     input {
@@ -55,11 +52,10 @@ task getReadInfo {
 
 task hisatCommand {
     input {
-        String outdir
         String sample
         File fastq1
         File fastq2
-        String hisatIndex
+        File hisatIndex
         String strandness
         String id
         String pu
@@ -73,11 +69,11 @@ task hisatCommand {
             /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         fi
 
-        samtools view -b sample.align.sam | samtools sort 
+        samtools sort -@ -8 -o ~{sample}.final.bam ~{sample}.align.sam     
     >>>
 
      output{
-         File samFile =  "~{sample}.align.sam"
+         File bamFile =  "~{sample}.final.bam"
      }
 
     runtime {

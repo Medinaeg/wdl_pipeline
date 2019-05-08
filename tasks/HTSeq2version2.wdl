@@ -12,7 +12,7 @@ workflow HTSeq2 {
         input:
             sample = sample,
             outdir = outdir,
-            bamFile = alignedBam,
+            alignedBam = alignedBam,
             gtf = reference_gtf
     }
 
@@ -25,12 +25,12 @@ task Counts {
     input {
         String sample
         String outdir
-        File bamFile
+        File alignedBam
         File gtf
     }
 
     command <<<
-    /usr/local/HTSeq-0.6.1p1/scripts/htseq-count --format bam --order pos --mode intersection-strict --stranded reverse --minaqual 1 --type exon --idattr gene_id ~{bamFile} ~{gtf} > ~{sample}.HTSeq2counts.tsv
+    /usr/local/HTSeq-0.6.1p1/scripts/htseq-count --format bam --order pos --mode intersection-strict --stranded reverse --minaqual 1 --type exon --idattr gene_id ~{alignedBam} ~{gtf} > ~{sample}.HTSeq2counts.tsv
     >>>
 
     output {
