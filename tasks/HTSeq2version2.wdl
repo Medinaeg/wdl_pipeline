@@ -39,5 +39,8 @@ task Counts {
 
     runtime {
         docker: "dmccloskey/htseq-count:latest"
+        disks: "local-disk 100 SSD"
+        memory: "8G"
+        cpu: 2
     }
 }

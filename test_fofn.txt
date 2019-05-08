@@ -1,1 +1,4 @@
-S10295897_S18	gs://trial-cmp001/10295897_S18_R1_001.fastq.gz	gs://trial-cmp001/10295897_S18_R2_001.fastq.gz
+S10295897_S18	gs://trial-cmp001/fastq_files/10295897_S18_R1_001.fastq.gz	gs://trial-cmp001/fastq_files/10295897_S18_R2_001.fastq.gz
+S10295898	gs://trial-cmp001/fastq_files/10295898_R1_001.fastq.gz	gs://trial-cmp001/fastq_files/10295898_R2_001.fastq.gz
+S10302017	gs://trial-cmp001/fastq_files/10302017_S3_R1_001.fastq.gz	gs://trial-cmp001/fastq_files/10302017_S3_R2_001.fastq.gz
+S10302019	gs://trial-cmp001/fastq_files/10302019_S10_R1_001.fastq.gz	gs://trial-cmp001/fastq_files/10302019_S10_R2_001.fastq.gz

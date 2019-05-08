@@ -40,5 +40,8 @@ task StringTie{
 
     runtime {
         docker: "ahwagner/stringtie:latest"
+        disks: "local-disk 100 SSD"
+        memory: "8G"
+        cpu: 2
     }
 }

@@ -80,5 +80,8 @@ task hisatCommand {
 
     runtime {
         docker: "limesbonn/hisat2:latest"
+        disks: "local-disk 100 SSD"
+        memory: "8G"
+        cpu: 2
     }
 }
