@@ -86,6 +86,6 @@ task getSamplesPerIndex {
     output {
         Array[Array[String]] pairedFileList = read_tsv("STDOUT.~{i}")
         Array[File] fastqList = read_lines("FILELIST.~{i}")
-        Int nPairsOfFastqs = "NLINES.~{i}"
+        String nPairsOfFastqs = read_string("NLINES.~{i}")
     }
 }
