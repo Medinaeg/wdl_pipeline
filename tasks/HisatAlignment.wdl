@@ -6,6 +6,7 @@ workflow runAlignments {
         File fastq1
         File fastq2
         String strandness
+        String hisatPrefix
         File hisatIndex
     }
 
@@ -20,6 +21,7 @@ workflow runAlignments {
             sample = sample,
             fastq1 = fastq1,
             fastq2 = fastq2,
+            hisatPrefix = hisatPrefix,
             hisatIndex = hisatIndex,
             strandness = strandness,
             id = getReadInfo.FastqInfo[0],
@@ -55,6 +57,7 @@ task hisatCommand {
         String sample
         File fastq1
         File fastq2
+        String hisatPrefix
         File hisatIndex
         String strandness
         String id
@@ -63,10 +66,14 @@ task hisatCommand {
     }
 
     command <<<
+        # If reference-data1/myhisat2.tar.gz is used, the directory will look like ./hisat2/GRCh38_HISAT
+        tar -zxvf ~{hisatIndex} -C .
+        # Set hisat_prefix to 'hisat2/GRCh38_HISAT2'
+
         if [ "~{strandness}" == "NA" ]; then
-            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         else
-            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         fi
 
         samtools sort -@ -8 -o ~{sample}.final.bam ~{sample}.align.sam     
