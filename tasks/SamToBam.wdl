@@ -31,11 +31,11 @@ task ToBam {
     }
 
     command <<<
-        samtools view -Sb -o ~{outdir}/alignment/~{sample}.align.bam ~{samFile}
+        samtools view -Sb -o ~{sample}.align.bam ~{samFile}
     >>>
 
     output {
-        File alignedBam = "~{outdir}/alignment/~{sample}.align.bam"
+        File alignedBam = "~{sample}.align.bam"
     }
 
     runtime {
@@ -51,11 +51,11 @@ task SortBam {
     }
 
     command <<<
-        samtools sort -o ~{outdir}/alignment/~{sample}.final.bam ~{alignedBam}
+        samtools sort -o ~{sample}.final.bam ~{alignedBam}
     >>>
 
     output {
-        File finalBam = "~{outdir}/alignment/~{sample}.final.bam"
+        File finalBam = "~{sample}.final.bam"
     }
 
     runtime {

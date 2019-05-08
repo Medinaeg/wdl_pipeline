@@ -30,11 +30,11 @@ task Counts {
     }
 
     command <<<
-    /usr/local/HTSeq-0.6.1p1/scripts/htseq-count --format bam --order pos --mode intersection-strict --stranded reverse --minaqual 1 --type exon --idattr gene_id ~{bamFile} ~{gtf} > ~{outdir}/expression/~{sample}.HTSeq2counts.tsv
+    /usr/local/HTSeq-0.6.1p1/scripts/htseq-count --format bam --order pos --mode intersection-strict --stranded reverse --minaqual 1 --type exon --idattr gene_id ~{bamFile} ~{gtf} > ~{sample}.HTSeq2counts.tsv
     >>>
 
     output {
-        File countsFile = "~{outdir}/expression/~{sample}.HTSeq2counts.tsv"
+        File countsFile = "~{sample}.HTSeq2counts.tsv"
     }
 
     runtime {

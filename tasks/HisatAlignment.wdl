@@ -68,14 +68,14 @@ task hisatCommand {
 
     command <<<
         if [ ~{strandness} == "NA" ]; then
-            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{outdir}/alignment/~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         else
-            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{outdir}/alignment/~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         fi
     >>>
 
      output{
-         File samFile =  "~{outdir}/alignment/~{sample}.align.sam"
+         File samFile =  "~{sample}.align.sam"
      }
 
     runtime {

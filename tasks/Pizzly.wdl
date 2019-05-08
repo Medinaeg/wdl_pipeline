@@ -33,11 +33,11 @@ task runPizzly {
     }
 
     command <<<
-    /usr/local/bin/pizzly -k 31 --gtf ~{reference_gtf} --align-score 2 --insert-size 400 --fasta ~{reference_cdna} --output ~{outdir}/expression/kallisto/~{sample}/pizzly ~{pizzlyInput}
+    /usr/local/bin/pizzly -k 31 --gtf ~{reference_gtf} --align-score 2 --insert-size 400 --fasta ~{reference_cdna} --output ~{sample}/pizzly ~{pizzlyInput}
     >>>
 
     output {
-        File unfilteredJSON = "~{outdir}/expression/kallisto/~{sample}/pizzly.unfiltered.json"
+        File unfilteredJSON = "~{sample}/pizzly.unfiltered.json"
     }
 
     runtime {

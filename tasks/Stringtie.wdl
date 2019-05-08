@@ -31,11 +31,11 @@ task StringTie{
     }
 
     command <<<
-        /usr/local/bin/stringtie -G ~{gtf} -e -B -o ~{outdir}/expression/~{sample}.transcripts.gtf -A ~{outdir}/expression/~{sample}.abundances.tsv ~{bamFile}
+        /usr/local/bin/stringtie -G ~{gtf} -e -B -o ~{sample}.transcripts.gtf -A ~{sample}.abundances.tsv ~{bamFile}
     >>>
 
     output {
-        File fpkmFile = "~{outdir}/expression/~{sample}.abundances.tsv"
+        File fpkmFile = "~{sample}.abundances.tsv"
     }
 
     runtime {

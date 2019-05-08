@@ -35,12 +35,12 @@ task runQuant {
     }
 
     command <<<
-    /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion -o ~{outdir}/expression/kallisto/~{sample} ~{fastq1} ~{fastq2}
+    /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion -o ~{sample} ~{fastq1} ~{fastq2}
     >>>
 
     output {
-        File quantFile = "~{outdir}/expression/kallisto/~{sample}/abundances.tsv"
-        File pizzlyInput = "~{outdir}/expression/kallisto/~{sample}/fusion.txt"
+        File quantFile = "~{sample}/abundances.tsv"
+        File pizzlyInput = "~{sample}/fusion.txt"
     }
 
     runtime {
