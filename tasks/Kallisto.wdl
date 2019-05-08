@@ -39,7 +39,7 @@ task runQuant {
     >>>
 
     output {
-        File quantFile = "~{sample}/abundances.tsv"
+        File quantFile = "~{sample}/abundance.tsv"
         File pizzlyInput = "~{sample}/fusion.txt"
     }
 
