@@ -3,16 +3,14 @@ version 1.0
 workflow runKallisto {
     input {
         String sample
-        File fastq1
-        File fastq2
+        Array[File] fastqList
         File kallisto_index
     }
 
     call runQuant {
         input:
             sample = sample,
-            fastq1 = fastq1,
-            fastq2 = fastq2,
+            fastqList = fastqList,
             kallisto_index = kallisto_index
     }
 
@@ -20,19 +18,17 @@ workflow runKallisto {
         File quantFile = runQuant.quantFile
         File pizzlyInput = runQuant.pizzlyInput
     }
-
 }
 
 task runQuant {
     input {
         String sample
-        File fastq1
-        File fastq2
+        Array[File] fastqList
         File kallisto_index
     }
 
     command <<<
-    /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion -o ~{sample} ~{fastq1} ~{fastq2}
+    /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample} ~{sep=' ' fastqList+}
     >>>
 
     output {

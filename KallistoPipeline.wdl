@@ -1,35 +1,42 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-import "./tasks/Kallisto.wdl" as Kallisto
-import "./tasks/Pizzly.wdl" as Pizzly
+#import "./tasks/Kallisto.wdl" as Kallisto
+#import "./tasks/Pizzly.wdl" as Pizzly
 
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
 
 workflow myWorkflow {
     input {
-        String
+        File fofn
         String strandness
 
-        String hisat_index
         File reference_gtf
         File kallisto_index
         File reference_cdna
     }
 
-    Array[Array[String]] inputSamples = read_tsv(fofn)
+    call splitSamples {
+        input:
+            fofn = fofn
+        }
 
-    scatter (line in inputSamples) {
-        String sample = line[0]
-        File fastq1 = line[1]
-        File fastq2 = line[2]
+    scatter (sampleIndex in splitSamples.sampleList) {
+        String index = sampleIndex[0]
+        String sample = sampleIndex[1]
+
+        call getSamplesPerIndex {
+            input:
+                i = index,
+                sample = sample,
+                fofn = fofn
+        }
 
         call Kallisto.runKallisto as runKallisto {
             input:
                 sample = sample,
-                fastq1 = fastq1,
-                fastq2 = fastq2,
+                fastqList = getSamplesPerIndex.fastqList,
                 kallisto_index = kallisto_index
         }
 
@@ -46,5 +53,39 @@ workflow myWorkflow {
         Array[File] quantFile = runKallisto.quantFile
         Array[File] pizzlyInput = runKallisto.pizzlyInput
         Array[File] pizzlyOutput = runPizzly.unfilteredJSON
+    }
+}
+
+task splitSamples {
+    input {
+        File fofn
+    }
+
+    command <<<
+        cut -f1 ~{fofn} | sort | uniq | awk 'BEGIN{OFS="\t";} {print NR,$0}' > STDOUT
+    >>>
+
+    output {
+        Array[Array[String]] sampleList = read_tsv("STDOUT")
+    }
+}
+
+task getSamplesPerIndex {
+    input {
+        Int i
+        String sample
+        File fofn
+    }
+
+    command <<<
+        awk -v s="~{sample}" '$1 == s {print}' ~{fofn} > STDOUT.~{i}
+        cat STDOUT.~{i} | cut -f2-3 | tr '\t' '\n' > FILELIST.~{i}
+        wc -l STDOUT.~{i} > NLINES.~{i}
+    >>>
+
+    output {
+        Array[Array[String]] pairedFileList = read_tsv("STDOUT.~{i}")
+        Array[File] fastqList = read_lines("FILELIST.~{i}")
+        Int nPairsOfFastqs = "NLINES.~{i}"
     }
 }
