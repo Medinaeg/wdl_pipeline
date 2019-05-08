@@ -16,7 +16,8 @@ workflow myWorkflow {
         String outdir
         String strandness
 
-        String hisat_index
+        String hisat_prefix
+        File hisat_index
         File reference_gtf
         File kallisto_index
         File reference_cdna
@@ -35,6 +36,7 @@ workflow myWorkflow {
                 fastq1 = fastq1,
                 fastq2 = fastq2,
                 strandness = strandness,
+                hisatPrefix = hisat_prefix,
                 hisatIndex = hisat_index
         }
     }
