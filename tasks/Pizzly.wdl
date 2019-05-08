@@ -3,7 +3,6 @@ version 1.0
 workflow getFusions {
     input {
         String sample
-        String outdir
         File reference_gtf
         File reference_cdna
         File pizzlyInput
@@ -12,7 +11,6 @@ workflow getFusions {
     call runPizzly {
         input:
             sample = sample,
-            outdir = outdir,
             reference_gtf = reference_gtf,
             reference_cdna = reference_cdna,
             pizzlyInput = pizzlyInput
@@ -26,7 +24,6 @@ workflow getFusions {
 task runPizzly {
     input {
         String sample
-        String outdir
         File reference_gtf
         File reference_cdna
         File pizzlyInput

@@ -3,7 +3,6 @@ version 1.0
 workflow runKallisto {
     input {
         String sample
-        String outdir
         File fastq1
         File fastq2
         File kallisto_index
@@ -12,7 +11,6 @@ workflow runKallisto {
     call runQuant {
         input:
             sample = sample,
-            outdir = outdir,
             fastq1 = fastq1,
             fastq2 = fastq2,
             kallisto_index = kallisto_index
@@ -28,7 +26,6 @@ workflow runKallisto {
 task runQuant {
     input {
         String sample
-        String outdir
         File fastq1
         File fastq2
         File kallisto_index

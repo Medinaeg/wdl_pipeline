@@ -72,6 +72,8 @@ task hisatCommand {
         else
             /usr/local/bin/hisat2 -x ~{hisatIndex} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         fi
+
+        samtools view -b sample.align.sam | samtools sort 
     >>>
 
      output{
