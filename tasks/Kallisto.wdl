@@ -28,7 +28,7 @@ task runQuant {
     }
 
     command <<<
-    /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion -o ~{sample} ~{sep=' ' fastqList+}
+    /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample} ~{sep=' ' fastqList+}
     >>>
 
     output {

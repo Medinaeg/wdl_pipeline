@@ -1,18 +1,17 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-import "./tasks/Kallisto.wdl" as Kallisto
-import "./tasks/Pizzly.wdl" as Pizzly
+#import "./tasks/Kallisto.wdl" as Kallisto
+#import "./tasks/Pizzly.wdl" as Pizzly
 
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
 
 workflow myWorkflow {
     input {
         File fofn
         String strandness
 
-        String hisat_index
         File reference_gtf
         File kallisto_index
         File reference_cdna
@@ -77,7 +76,7 @@ task getSamplesPerIndex {
         String sample
         File fofn
     }
-    
+
     command <<<
         awk -v s="~{sample}" '$1 == s {print}' ~{fofn} > STDOUT.~{i}
         cat STDOUT.~{i} | cut -f2-3 | tr '\t' '\n' > FILELIST.~{i}
