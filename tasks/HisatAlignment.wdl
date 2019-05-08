@@ -79,15 +79,15 @@ task hisatCommand {
         # Set hisat_prefix to 'hisat2/GRCh38_HISAT2'
 
         if [ "~{strandness}" == "NA" ]; then
-            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
         else
-            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
+            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
         fi
 
-        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{sample}.align.sam
+        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{sample}.~{j}.align.sam
     >>>
 
-     output{
+     output {
          File bamFile =  "~{sample}.~{j}.final.bam"
      }
 
