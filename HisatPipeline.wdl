@@ -15,8 +15,11 @@ workflow myWorkflow {
         File fofn
         String outdir
         String strandness
+
         String hisat_index
         File reference_gtf
+        File kallisto_index
+        File reference_cdna
     }
 
     Array[Array[String]] inputSamples = read_tsv(fofn)
