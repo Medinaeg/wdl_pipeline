@@ -1,0 +1,9 @@
+{
+  "myWorkflow.reference_cdna": "gs://reference-data1/Homo_sapiens.GRCh38.cdna.all.fa.gz",
+  "myWorkflow.reference_gtf": "gs://reference-data1/Homo_sapiens.GRCh38.94.gtf",
+  "myWorkflow.hisat_index": "gs://reference-data1/myhisat2.tar.gz",
+  "myWorkflow.fofn": "gs://trial-cmp001/fastq_files/trial-cmp001_fofnOnly2.txt",
+  "myWorkflow.strandness": "RF",
+  "myWorkflow.kallisto_index": "gs://reference-data1/Homo_sapiens.GRCh38_94.cdna.all.kallisto.index",
+  "myWorkflow.hisat_prefix": "hisat2/GRCh38_HISAT2"
+}

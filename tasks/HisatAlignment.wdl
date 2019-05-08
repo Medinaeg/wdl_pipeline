@@ -3,35 +3,42 @@ version 1.0
 workflow runAlignments {
     input {
         String sample
-        File fastq1
-        File fastq2
+        Array[Array[String]] fileList # tsv of sample, fastq1/2, index
         String strandness
         String hisatPrefix
         File hisatIndex
     }
 
-    call getReadInfo {
-        input:
-            sample = sample,
-            fastq1 = fastq1
-    }
+    scatter (filePair in fileList) {
+        String sample = filePair[0]
+        File fastq1 = filePair[1]
+        File fastq2 = filePair[2]
+        Int j = filePair[3]
 
-    call hisatCommand {
-        input:
-            sample = sample,
-            fastq1 = fastq1,
-            fastq2 = fastq2,
-            hisatPrefix = hisatPrefix,
-            hisatIndex = hisatIndex,
-            strandness = strandness,
-            id = getReadInfo.FastqInfo[0],
-            pu = getReadInfo.FastqInfo[1],
-            sm = getReadInfo.FastqInfo[2],
+        call getReadInfo {
+            input:
+                sample = sample,
+                fastq1 = fastq1
+        }
 
+        call hisatCommand {
+            input:
+                j = j,
+                sample = sample,
+                fastq1 = fastq1,
+                fastq2 = fastq2,
+                hisatPrefix = hisatPrefix,
+                hisatIndex = hisatIndex,
+                strandness = strandness,
+                id = getReadInfo.FastqInfo[0],
+                pu = getReadInfo.FastqInfo[1],
+                sm = getReadInfo.FastqInfo[2],
+
+        }
     }
 
     output {
-        File bamFile = hisatCommand.bamFile
+        Array[File] bamFile = hisatCommand.bamFile
     }
 }
 
@@ -54,6 +61,7 @@ task getReadInfo {
 
 task hisatCommand {
     input {
+        Int j
         String sample
         File fastq1
         File fastq2
@@ -76,11 +84,11 @@ task hisatCommand {
             /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.align.sam
         fi
 
-        samtools sort -@ -8 -o ~{sample}.final.bam ~{sample}.align.sam     
+        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{sample}.align.sam
     >>>
 
      output{
-         File bamFile =  "~{sample}.final.bam"
+         File bamFile =  "~{sample}.~{j}.final.bam"
      }
 
     runtime {
