@@ -107,7 +107,7 @@ task hisatCommand {
 }
 
 task toBam {
-    inputs {
+    input {
         String sample
         Int j
         File samFile
