@@ -33,12 +33,18 @@ workflow runAlignments {
                 id = getReadInfo.FastqInfo[0],
                 pu = getReadInfo.FastqInfo[1],
                 sm = getReadInfo.FastqInfo[2],
+        }
 
+        call toBam {
+            input:
+                j = j,
+                sample = sample,
+                samFile = hisatCommand.samFile
         }
     }
 
     output {
-        Array[File] bamFile = hisatCommand.bamFile
+        Array[File] bamFile = toBam.bamFile
     }
 }
 
@@ -85,21 +91,38 @@ task hisatCommand {
         tar -zxvf ~{hisatIndex} -C .
         # Set hisat_prefix to 'hisat2/GRCh38_HISAT2'
 
-        if [ "~{strandness}" == "NA" ]; then
-            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
-        else
-            /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
-        fi
-
-        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{sample}.~{j}.align.sam
+        /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
     >>>
 
      output {
-         File bamFile =  "~{sample}.~{j}.final.bam"
+         File samFile =  "~{sample}.~{j}.align.sam"
      }
 
     runtime {
-        docker: "limesbonn/hisat2:latest"
+        docker: "zlskidmore/hisat2:latest"
+        disks: "local-disk 100 SSD"
+        memory: "8G"
+        cpu: 2
+    }
+}
+
+task toBam {
+    inputs {
+        String sample
+        Int j
+        File samFile
+    }
+
+    command <<<
+        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{samFile}
+    >>>
+
+    output {
+        File bamFile = "~{sample}.~{j}.final.bam"
+    }
+
+    runtime {
+        docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
         disks: "local-disk 100 SSD"
         memory: "8G"
         cpu: 2
