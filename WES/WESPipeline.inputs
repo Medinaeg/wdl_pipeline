@@ -1,0 +1,6 @@
+{
+  "myWorkflow.reference_fa": "File",
+  "myWorkflow.fofn": "gs://dna-dev1/acres_fofn.txt",
+  "myWorkflow.reference_prefix": "String"
+}
+
