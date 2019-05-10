@@ -91,7 +91,7 @@ task hisatCommand {
         tar -zxvf ~{hisatIndex} -C .
         # Set hisat_prefix to 'hisat2/GRCh38_HISAT2'
 
-        /usr/local/bin/hisat2 -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
+        /usr/local/bin/hisat2 -p 8 --dta -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
     >>>
 
      output {
