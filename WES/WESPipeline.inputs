@@ -1,6 +1,6 @@
 {
-  "myWorkflow.reference_fa": "File",
+  "myWorkflow.reference_fa": "gs://reference-data2/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa",
   "myWorkflow.fofn": "gs://dna-dev1/acres_fofn.txt",
-  "myWorkflow.reference_prefix": "String"
+  "myWorkflow.reference_prefix": "Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
 }
 

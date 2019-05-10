@@ -92,9 +92,9 @@ task BWACommand {
 
     String bwaDetails = 'echo "@RG\tID:~{id}\tPU:~{pu}"."~{sm}\tSM:~{sample}\tLB:~{id}"."~{sm}\tPL:ILLUMINA\tCN:UCLA"'
     
+    ##TODO: Check if bwaDetails is correct.
     command <<<
-        bwa mem -K 100000000 -t 8 -R ~(bwaDetails) ./~{reference_prefix} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam 
-#        bwa mem -K 100000000 -t 8 -R $(echo "@RG\tID:$id\tPU:$pu"."$sm\tSM:$sample\tLB:$id"."$sm\tPL:ILLUMINA\tCN:UCLA") ${reference} ${r1file} ${r2file} > ${prefix}.sam
+        ./bwa mem -K 100000000 -t 8 -R ~(bwaDetails) ./~{reference_prefix} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam 
     >>>
 
     output {
@@ -102,7 +102,7 @@ task BWACommand {
     }
 
     runtime {
-        docker: "zlskidmore/hisat2:latest"
+        docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
         disks: "local-disk 100 SSD"
         memory: "8G"
         cpu: 2
@@ -116,14 +116,19 @@ task Samblaster {
     }
 
     command <<<
-        samblaster -a --addMateTags -i ~{samFile} -o ${sample}.blast.sam
-        /u/flashscratch/k/katiecam/software/samblaster/samblaster -a --addMateTags -i ${prefix}.sam -o ${prefix}.blast.sam
+        /usr/local/bin/samblaster -a --addMateTags -i ~{samFile} -o ${sample}.blast.sam
     >>>
 
     output {
         File blastsamFile = "~{sample}.blast.sam"
     }
 
+    runtime {
+        docker: "mgibio/alignment_helper-cwl:1.0.0"
+        disks: "local-disk 100 SSD"
+        memory: "8G"
+        cpu: 2
+    }
 
 }
 
