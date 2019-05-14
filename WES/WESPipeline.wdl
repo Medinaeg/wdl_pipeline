@@ -3,41 +3,44 @@ version 1.0
 ##TODO: Add Fastq2 NA if needed/does not exist
 import "./tasks/runBWA.wdl" as BWA
 import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
+import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 #import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/runBWA.wdl" as BWA
 #import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/MergeAlignedBams.wdl" as MergedAlignedBams
+#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 workflow myWorkflow {
     input {
         File fofn
-        String reference_prefix
         File reference_fa
+        File thousG
+        File knownIndels
+        File dbsnp
     }
-
+# 1. Get unique samples from file list (column 1 in fofn)
     call splitSamples {
         input:
             fofn = fofn
         }
-
+# 2. Scatter across samples from sample list
     scatter (sampleIndex in splitSamples.sampleList) {
         String index = sampleIndex[0]
         String sample = sampleIndex[1]
-
+# 2A. Get all pairs of fastq files per sample
         call getSamplesPerIndex {
             input:
                 i = index,
                 sample = sample,
                 fofn = fofn
         }
-
+# 2B. Run BWA-MEM alignment on pairs of FASTQs
         call  BWA.runBWA as BWA {
             input:
                 sample = sample,
                 fileList = getSamplesPerIndex.pairedFileList,
-                reference_prefix = reference_prefix,
                 reference_fa = reference_fa
         }
-
+# 2C. Merge if there are more than one pair of FASTQ files
         if ( getSamplesPerIndex.nPairsOfFastqs != "1" ) {
             call MergeAlignedBams.mergeBams as mergeBams {
                 input:
@@ -46,11 +49,22 @@ workflow myWorkflow {
             }
         }
 
-       File ouputAlignedBam = select_first([mergeBams.mergedBam, BWA.bamFile])
-    }
+       File outputAlignedBam = select_first([mergeBams.mergedBam, BWA.bamFile])
 
+       call MarkDuplicatesBQSR.GatkCommands as MDBQSR {
+            input:
+                sample = sample,
+                bamFile = outputAlignedBam,
+                reference_fa = reference_fa,
+                thousG = thousG,
+                knownIndels = knownIndels,
+                dbsnp = dbsnp
+       }
+
+    }
+# 2D. Output aligned BAM files
     output {
-        Array[File] outputAlignedBams = ouputAlignedBam
+        Array[File] outputFinalBams = MDBQSR.finalBam
     }
 }
 

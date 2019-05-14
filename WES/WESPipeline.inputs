@@ -1,6 +1,8 @@
 {
+  "myWorkflow.dbsnp": "gs://reference-data2/keep/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.nochr.vcf.gz",
+  "myWorkflow.thousG": "gs://reference-data2/keep/Mills_and_1000G_gold_standard.indels.hg38.nochr.vcf.gz",
+  "myWorkflow.fofn": "gs://dna-dev1/acres_fofn2.txt",
   "myWorkflow.reference_fa": "gs://reference-data2/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa",
-  "myWorkflow.fofn": "gs://dna-dev1/acres_fofn.txt",
-  "myWorkflow.reference_prefix": "Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+  "myWorkflow.knownIndels": "gs://reference-data2/keep/Homo_sapiens_assembly38.known_indels.nochr.vcf.gz"
 }
 

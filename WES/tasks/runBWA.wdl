@@ -4,7 +4,6 @@ workflow runBWA {
     input {
         String sample
         Array[Array[String]] fileList #tsv of sample, fastq1/2, index
-        String reference_prefix
         File reference_fa
     }
 
@@ -26,7 +25,6 @@ workflow runBWA {
                 sample = sample,
                 fastq1 = fastq1,
                 fastq2 = fastq2,
-                reference_prefix = reference_prefix,
                 reference_fa = reference_fa,
                 id = getReadInfo.FastqInfo[0],
                 pu = getReadInfo.FastqInfo[1],
@@ -36,7 +34,7 @@ workflow runBWA {
         call Samblaster {
             input:
                 sample = sample,
-                samFile = BWACommand.samFile 
+                samFile = BWACommand.samFile
         }
 
         call toBam {
@@ -70,9 +68,9 @@ task getReadInfo {
 
     runtime {
         docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
-        disks: "local-disk 100 SSD"
-        memory: "8G"
-        cpu: 2
+        disks: "local-disk 50 SSD"
+        memory: "4G"
+        cpu: 1
     }
 }
 
@@ -83,18 +81,17 @@ task BWACommand {
         String sample
         File fastq1
         File fastq2
-        String reference_prefix
         File reference_fa
         String id
         String pu
-        String sm  
+        String sm
     }
 
     String bwaDetails = 'echo "@RG\tID:~{id}\tPU:~{pu}"."~{sm}\tSM:~{sample}\tLB:~{id}"."~{sm}\tPL:ILLUMINA\tCN:UCLA"'
-    
+
     ##TODO: Check if bwaDetails is correct.
     command <<<
-        ./bwa mem -K 100000000 -t 8 -R ~(bwaDetails) ./~{reference_prefix} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam 
+        ./bwa mem -K 100000000 -t 8 -R ~(bwaDetails) -o ~{sample}.~{j}.sam ./~{reference_fa} ~{fastq1} ~{fastq2}
     >>>
 
     output {
@@ -116,7 +113,7 @@ task Samblaster {
     }
 
     command <<<
-        /usr/local/bin/samblaster -a --addMateTags -i ~{samFile} -o ${sample}.blast.sam
+        /usr/local/bin/samblaster -a --addMateTags -i ~{samFile} -o ~{sample}.blast.sam
     >>>
 
     output {
