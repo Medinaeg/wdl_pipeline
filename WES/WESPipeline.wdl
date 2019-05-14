@@ -1,13 +1,13 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-import "./tasks/runBWA.wdl" as BWA
-import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
-import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
+#import "./tasks/runBWA.wdl" as BWA
+#import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
+#import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/runBWA.wdl" as BWA
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/MergeAlignedBams.wdl" as MergedAlignedBams
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/runBWA.wdl" as BWA
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/MergeAlignedBams.wdl" as MergedAlignedBams
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 workflow myWorkflow {
     input {
