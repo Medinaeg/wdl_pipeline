@@ -17,7 +17,7 @@ workflow getFusions {
     }
 
     output {
-        File unfilteredJSON = runPizzly.unfilteredJSON
+        Array[File] pizzlyOut = runPizzly.pizzlyOut
     }
 }
 

@@ -15,7 +15,7 @@ workflow runKallisto {
     }
 
     output {
-        File quantFile = runQuant.quantFile
+        Array[File] kallistoOut = runQuant.kallistoOut
         File pizzlyInput = runQuant.pizzlyInput
     }
 }

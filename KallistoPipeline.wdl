@@ -1,11 +1,11 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-#import "./tasks/Kallisto.wdl" as Kallisto
-#import "./tasks/Pizzly.wdl" as Pizzly
+import "./tasks/Kallisto.wdl" as Kallisto
+import "./tasks/Pizzly.wdl" as Pizzly
 
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
+#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Kallisto.wdl" as Kallisto
+#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Pizzly.wdl" as Pizzly
 
 workflow myWorkflow {
     input {
