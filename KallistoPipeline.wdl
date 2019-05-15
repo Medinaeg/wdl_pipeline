@@ -69,7 +69,7 @@ task splitSamples {
     }
 }
 
-task getFastqs {
+task getSamplesPerIndex {
     input {
         String i
         String sample
