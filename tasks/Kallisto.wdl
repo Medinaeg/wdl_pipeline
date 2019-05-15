@@ -28,12 +28,14 @@ task runQuant {
     }
 
     command <<<
-        /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample} ~{sep=" " fastqList}
+        /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample}.kallisto ~{sep=" " fastqList}
+
+        for i in ~{sample}/*; do new=`echo $i | tr '/' '.'`; mv $i $new; done
     >>>
 
     output {
-        File quantFile = "~{sample}/abundance.tsv"
-        File pizzlyInput = "~{sample}/fusion.txt"
+        Array[File] kallistoOut = glob("~{sample}.kallisto*")
+        File pizzlyInput = "~{sample}.fusion.txt"
     }
 
     runtime {

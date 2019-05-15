@@ -50,9 +50,8 @@ workflow myWorkflow {
     }
 
     output {
-        Array[File] quantFile = runKallisto.quantFile
-        Array[File] pizzlyInput = runKallisto.pizzlyInput
-        Array[File] pizzlyOutput = runPizzly.unfilteredJSON
+        Array[Array[File]] kallistoOut = runKallisto.kallistoOut
+        Array[Array[File]] pizzlyOut = runPizzly.pizzlyOut
     }
 }
 
@@ -70,9 +69,9 @@ task splitSamples {
     }
 }
 
-task getSamplesPerIndex {
+task getFastqs {
     input {
-        Int i
+        String i
         String sample
         File fofn
     }
@@ -86,6 +85,6 @@ task getSamplesPerIndex {
     output {
         Array[Array[String]] pairedFileList = read_tsv("STDOUT.~{i}")
         Array[File] fastqList = read_lines("FILELIST.~{i}")
-        String nPairsOfFastqs = read_string("NLINES.~{i}")
+        Int nPairsOfFastqs = read_string("NLINES.~{i}")
     }
 }
