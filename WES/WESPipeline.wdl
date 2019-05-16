@@ -6,7 +6,7 @@ version 1.0
 #import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/runBWA.wdl" as BWA
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/MergeAlignedBams.wdl" as MergedAlignedBams
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/MergeAlignedBams.wdl" as MergeAlignedBams
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 workflow myWorkflow {
