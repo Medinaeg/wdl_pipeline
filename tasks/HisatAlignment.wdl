@@ -10,7 +10,6 @@ workflow runAlignments {
     }
 
     scatter (filePair in fileList) {
-        String sample = filePair[0]
         File fastq1 = filePair[1]
         File fastq2 = filePair[2]
         Int j = filePair[3]
@@ -66,9 +65,9 @@ task getReadInfo {
 
     runtime {
         docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
-        disks: "local-disk 100 SSD"
+        disks: "local-disk 25 SSD"
         memory: "8G"
-        cpu: 2
+        cpu: 1
     }
 }
 
@@ -101,8 +100,8 @@ task hisatCommand {
     runtime {
         docker: "zlskidmore/hisat2:latest"
         disks: "local-disk 100 SSD"
-        memory: "8G"
-        cpu: 2
+        memory: "16G"
+        cpu: 1
     }
 }
 
@@ -125,6 +124,6 @@ task toBam {
         docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
         disks: "local-disk 100 SSD"
         memory: "8G"
-        cpu: 2
+        cpu: 1
     }
 }
