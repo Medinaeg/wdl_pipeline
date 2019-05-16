@@ -34,7 +34,7 @@ task runPizzly {
     >>>
 
     output {
-        Array[File] pizzlyOut = glob("~{sample}.*")
+        Array[File] pizzlyOut = glob("~{sample}.pizzly*")
     }
 
     runtime {
