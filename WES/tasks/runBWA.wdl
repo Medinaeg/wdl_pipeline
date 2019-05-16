@@ -91,7 +91,7 @@ task BWACommand {
 
     ##TODO: Check if bwaDetails is correct.
     command <<<
-        ./bwa mem -K 100000000 -t 8 -R ~{bwaDetails} -o ~{sample}.~{j}.sam ~{reference_fa} ~{fastq1} ~{fastq2}
+        /usr/gitc/bwa mem -K 100000000 -t 8 -R ~{bwaDetails} -o ~{sample}.~{j}.sam ~{reference_fa} ~{fastq1} ~{fastq2}
     >>>
 
     output {
