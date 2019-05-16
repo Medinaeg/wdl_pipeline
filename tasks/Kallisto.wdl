@@ -30,7 +30,7 @@ task runQuant {
     command <<<
         /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample}.kallisto ~{sep=" " fastqList}
 
-        for i in ~{sample}/*; do new=`echo $i | tr '/' '.'`; mv $i $new; done
+        for i in ~{sample}.kallisto/*; do new=`echo $i | tr '/' '.'`; mv $i $new; done
     >>>
 
     output {
