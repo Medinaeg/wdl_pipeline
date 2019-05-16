@@ -41,7 +41,7 @@ workflow myWorkflow {
                 reference_fa = reference_fa
         }
 # 2C. Merge if there are more than one pair of FASTQ files
-        if ( getSamplesPerIndex.nPairsOfFastqs != "1" ) {
+        if ( getSamplesPerIndex.nPairsOfFastqs > 1 ) {
             call MergeAlignedBams.mergeBams as mergeBams {
                 input:
                     sample = sample,
@@ -49,7 +49,7 @@ workflow myWorkflow {
             }
         }
 
-       File outputAlignedBam = select_first([mergeBams.mergedBam, BWA.bamFile])
+       File outputAlignedBam = select_first([mergeBams.mergedBam, BWA.bamFile[0]])
 
        call MarkDuplicatesBQSR.GatkCommands as MDBQSR {
             input:
@@ -92,12 +92,12 @@ task getSamplesPerIndex {
     command <<<
         awk -v s="~{sample}" 'BEGIN{OFS="\t";} $1 == s {print $0,NR}' ~{fofn} > STDOUT.~{i}
         cat STDOUT.~{i} | cut -f2-3 | tr '\t' '\n' > FILELIST.~{i}
-        wc -l STDOUT.~{i} > NLINES.~{i}
+        cat STDOUT.~{i} | wc -l | sed 's/ //g' > NLINES.~{i}
     >>>
 
     output {
         Array[Array[String]] pairedFileList = read_tsv("STDOUT.~{i}")
         Array[File] fastqList = read_lines("FILELIST.~{i}")
-        String nPairsOfFastqs = read_string("NLINES.~{i}")
+        Int nPairsOfFastqs = read_int("NLINES.~{i}")
     }
 }
