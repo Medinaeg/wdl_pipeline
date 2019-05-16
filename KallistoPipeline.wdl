@@ -79,12 +79,12 @@ task getSamplesPerIndex {
     command <<<
         awk -v s="~{sample}" '$1 == s {print}' ~{fofn} > STDOUT.~{i}
         cat STDOUT.~{i} | cut -f2-3 | tr '\t' '\n' > FILELIST.~{i}
-        wc -l STDOUT.~{i} > NLINES.~{i}
+        cat STDOUT.~{i} | wc -l | sed 's/ //g' > NLINES.~{i}
     >>>
 
     output {
         Array[Array[String]] pairedFileList = read_tsv("STDOUT.~{i}")
         Array[File] fastqList = read_lines("FILELIST.~{i}")
-        Int nPairsOfFastqs = read_string("NLINES.~{i}")
+        Int nPairsOfFastqs = read_int("NLINES.~{i}")
     }
 }
