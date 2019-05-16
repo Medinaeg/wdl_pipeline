@@ -35,7 +35,7 @@ task runQuant {
 
     output {
         Array[File] kallistoOut = glob("~{sample}.kallisto*")
-        File pizzlyInput = "~{sample}.fusion.txt"
+        File pizzlyInput = "~{sample}.kallisto.fusion.txt"
     }
 
     runtime {
