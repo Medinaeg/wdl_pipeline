@@ -15,7 +15,7 @@ workflow runKallisto {
     }
 
     output {
-        File quantFile = runQuant.quantFile
+        Array[File] kallistoOut = runQuant.kallistoOut
         File pizzlyInput = runQuant.pizzlyInput
     }
 }
@@ -28,12 +28,14 @@ task runQuant {
     }
 
     command <<<
-        /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample} ~{sep=" " fastqList}
+        /usr/local/bin/kallisto quant -i ~{kallisto_index} -b 100 --fusion --fr-stranded -o ~{sample}.kallisto ~{sep=" " fastqList}
+
+        for i in ~{sample}.kallisto/*; do new=`echo $i | tr '/' '.'`; mv $i $new; done
     >>>
 
     output {
-        File quantFile = "~{sample}/abundance.tsv"
-        File pizzlyInput = "~{sample}/fusion.txt"
+        Array[File] kallistoOut = glob("~{sample}.kallisto*")
+        File pizzlyInput = "~{sample}.kallisto.fusion.txt"
     }
 
     runtime {

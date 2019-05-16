@@ -17,7 +17,7 @@ workflow getFusions {
     }
 
     output {
-        File unfilteredJSON = runPizzly.unfilteredJSON
+        Array[File] pizzlyOut = runPizzly.pizzlyOut
     }
 }
 
@@ -30,17 +30,17 @@ task runPizzly {
     }
 
     command <<<
-    /usr/local/bin/pizzly -k 31 --gtf ~{reference_gtf} --align-score 2 --insert-size 400 --fasta ~{reference_cdna} --output ~{sample}.pizzly ~{pizzlyInput}
+        /usr/local/bin/pizzly -k 31 --gtf ~{reference_gtf} --align-score 2 --insert-size 400 --fasta ~{reference_cdna} --output ~{sample}.pizzly ~{pizzlyInput}
     >>>
 
     output {
-        File unfilteredJSON = "~{sample}.pizzly.unfiltered.json"
+        Array[File] pizzlyOut = glob("~{sample}.pizzly*")
     }
 
     runtime {
         docker: "chrisamiller/docker-pizzly:latest"
-        disks: "local-disk 100 SSD"
+        disks: "local-disk 50 SSD"
         memory: "8G"
-        cpu: 2
+        cpu: 1
     }
 }

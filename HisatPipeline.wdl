@@ -19,8 +19,6 @@ workflow myWorkflow {
         File reference_cdna
     }
 
-    Array[Array[String]] inputSamples = read_tsv(fofn)
-
     call splitSamples {
         input:
             fofn = fofn
@@ -35,7 +33,7 @@ workflow myWorkflow {
                 i = index,
                 sample = sample,
                 fofn = fofn
-        } # pairedFileList, nPairsOfFastqs
+        }
 
         call Hisat.runAlignments as Hisat {
             input:
@@ -46,7 +44,7 @@ workflow myWorkflow {
                 hisatIndex = hisat_index
         }
 
-        if ( getSamplesPerIndex.nPairsOfFastqs != "1" ) {
+        if ( getSamplesPerIndex.nPairsOfFastqs > 1 ) {
             call MergeAlignedBams.mergeBams as mergeBams {
                 input:
                     sample = sample,
@@ -54,7 +52,7 @@ workflow myWorkflow {
             }
         }
 
-        File outputAlignedBam = select_first([mergeBams.mergedBam, Hisat.bamFile])
+        File outputAlignedBam = select_first([mergeBams.mergedBam, Hisat.bamFile[0]])
     }
 
     output {
@@ -78,7 +76,7 @@ task splitSamples {
 
 task getSamplesPerIndex {
     input {
-        Int i
+        String i
         String sample
         File fofn
     }
@@ -86,12 +84,12 @@ task getSamplesPerIndex {
     command <<<
         awk -v s="~{sample}" 'BEGIN{OFS="\t";} $1 == s {print $0,NR}' ~{fofn} > STDOUT.~{i}
         cat STDOUT.~{i} | cut -f2-3 | tr '\t' '\n' > FILELIST.~{i}
-        wc -l STDOUT.~{i} > NLINES.~{i}
+        cat STDOUT.~{i} | wc -l | sed 's/ //g' > NLINES.~{i}
     >>>
 
     output {
         Array[Array[String]] pairedFileList = read_tsv("STDOUT.~{i}")
         Array[File] fastqList = read_lines("FILELIST.~{i}")
-        String nPairsOfFastqs = read_string("NLINES.~{i}")
+        Int nPairsOfFastqs = read_int("NLINES.~{i}")
     }
 }
