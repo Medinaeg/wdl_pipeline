@@ -87,11 +87,8 @@ task BWACommand {
         String sm
     }
 
-    String bwaDetails = 'echo "@RG\tID:~{id}\tPU:~{pu}"."~{sm}\tSM:~{sample}\tLB:~{id}"."~{sm}\tPL:ILLUMINA\tCN:UCLA"'
-
-    ##TODO: Check if bwaDetails is correct.
     command <<<
-        /usr/gitc/bwa mem -K 100000000 -t 8 -R ~{bwaDetails} -o ~{sample}.~{j}.sam ~{reference_fa} ~{fastq1} ~{fastq2}
+        /usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~{id}\tPU:~{pu}.~{sm}\tSM:~{sample}\tLB:~{id}.~{sm}\tPL:ILLUMINA\tCN:UCLA" -o ~{sample}.~{j}.sam ~{reference_fa} ~{fastq1} ~{fastq2}
     >>>
 
     output {
@@ -137,7 +134,7 @@ task toBam {
     }
 
     command <<<
-        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{blastsamFile}
+        /usr/local/bin/samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{blastsamFile}
     >>>
 
     output {
