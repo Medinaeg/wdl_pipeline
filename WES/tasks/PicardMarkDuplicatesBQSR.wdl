@@ -5,7 +5,7 @@ workflow GatkCommands {
     input {
         String sample
         File bamFile
-        File reference_fa
+        Array[File] referenceFastaFiles
         File thousG
         File knownIndels
         File dbsnp
@@ -15,7 +15,7 @@ workflow GatkCommands {
         input:
             sample = sample,
             bamFile = bamFile,
-            reference_fa = reference_fa,
+            referenceFastaFiles = referenceFastaFiles,
             thousG = thousG,
             knownIndels = knownIndels,
             dbsnp = dbsnp
@@ -30,18 +30,20 @@ task PicardMD {
     input {
         String sample
         File bamFile
-        File reference_fa
+        Array[File] referenceFastaFiles
         File thousG
         File knownIndels
         File dbsnp
     }
 
+    File referenceFasta = referenceFastaFiles[0]
+
     command <<<
         java -Xmx1g -jar picard.jar MarkDuplicates I=~{bamFile} O=~{sample}.md.bam ASSUME_SORT_ORDER=coordinate METRICS_FILE=~{sample}.md.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 
-        ./gatk4/gatk-launch BaseRecalibrator -I ~{sample}.md.bam -R ./{reference_fa} --known-sites ~{thousG} --known-sites ~{knownIndels} --known-sites ~{dbsnp} -O ~{sample}.bqsr.table
+        ./gatk4/gatk-launch BaseRecalibrator -I ~{sample}.md.bam -R ./{referenceFasta} --known-sites ~{thousG} --known-sites ~{knownIndels} --known-sites ~{dbsnp} -O ~{sample}.bqsr.table
 
-        ./gatk4/gatk-launch ApplyBQSR -R ~{reference_fa} -I ~{sample}.md.bam -bqsr ~{sample}.bqsr.table --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30 -O ~{sample}.FINAL.bam
+        ./gatk4/gatk-launch ApplyBQSR -R ~{referenceFasta} -I ~{sample}.md.bam -bqsr ~{sample}.bqsr.table --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30 -O ~{sample}.FINAL.bam
     >>>
 
     output {

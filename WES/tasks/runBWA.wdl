@@ -4,7 +4,7 @@ workflow runBWA {
     input {
         String sample
         Array[Array[String]] fileList #tsv of sample, fastq1/2, index
-        File reference_fa
+        Array[File] referenceFastaFiles
     }
 
     scatter (filePair in fileList) {
@@ -25,7 +25,7 @@ workflow runBWA {
                 sample = sample,
                 fastq1 = fastq1,
                 fastq2 = fastq2,
-                reference_fa = reference_fa,
+                referenceFastaFiles = referenceFastaFiles,
                 id = getReadInfo.FastqInfo[0],
                 pu = getReadInfo.FastqInfo[1],
                 sm = getReadInfo.FastqInfo[2],
@@ -81,14 +81,16 @@ task BWACommand {
         String sample
         File fastq1
         File fastq2
-        File reference_fa
+        Array[File]+ referenceFastaFiles
         String id
         String pu
         String sm
     }
 
+    File referenceFasta = referenceFastaFiles[0]
+
     command <<<
-        /usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~{id}\tPU:~{pu}.~{sm}\tSM:~{sample}\tLB:~{id}.~{sm}\tPL:ILLUMINA\tCN:UCLA" ~{reference_fa} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam
+        /usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~{id}\tPU:~{pu}.~{sm}\tSM:~{sample}\tLB:~{id}.~{sm}\tPL:ILLUMINA\tCN:UCLA" ~{referenceFasta} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam
     >>>
 
     output {

@@ -12,10 +12,15 @@ import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks
 workflow myWorkflow {
     input {
         File fofn
-        File reference_fa
+        File pathsToReferenceFastaFiles
         File thousG
         File knownIndels
         File dbsnp
+    }
+# Prelim step: Get reference.fa files as bundle
+    call getReferenceFiles {
+        input:
+            pathsToReferenceFastaFiles = pathsToReferenceFastaFiles
     }
 # 1. Get unique samples from file list (column 1 in fofn)
     call splitSamples {
@@ -38,7 +43,7 @@ workflow myWorkflow {
             input:
                 sample = sample,
                 fileList = getSamplesPerIndex.pairedFileList,
-                reference_fa = reference_fa
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 # 2C. Merge if there are more than one pair of FASTQ files
         if ( getSamplesPerIndex.nPairsOfFastqs > 1 ) {
@@ -55,7 +60,7 @@ workflow myWorkflow {
             input:
                 sample = sample,
                 bamFile = outputAlignedBam,
-                reference_fa = reference_fa,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles,
                 thousG = thousG,
                 knownIndels = knownIndels,
                 dbsnp = dbsnp
@@ -67,6 +72,21 @@ workflow myWorkflow {
         Array[File] outputFinalBams = MDBQSR.finalBam
     }
 }
+
+task getReferenceFiles {
+    input {
+        File pathsToReferenceFastaFiles
+    }
+
+    command <<<
+        cut -f1 ~{pathsToReferenceFastaFiles} >> STDOUT
+    >>>
+
+    output {
+        Array[File] referenceFastaFiles = read_lines("STDOUT")
+    }
+}
+
 
 task splitSamples {
     input {
