@@ -88,7 +88,7 @@ task BWACommand {
     }
 
     command <<<
-        /usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~{id}\tPU:~{pu}.~{sm}\tSM:~{sample}\tLB:~{id}.~{sm}\tPL:ILLUMINA\tCN:UCLA" -o ~{sample}.~{j}.sam ~{reference_fa} ~{fastq1} ~{fastq2}
+        /usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~{id}\tPU:~{pu}.~{sm}\tSM:~{sample}\tLB:~{id}.~{sm}\tPL:ILLUMINA\tCN:UCLA" ~{reference_fa} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam
     >>>
 
     output {
