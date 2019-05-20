@@ -7,7 +7,7 @@ task mergeBams {
     }
 
     command <<<
-        samtools merge ~{sample}.bam ~{sep=" " bamFiles}
+        /usr/local/bin/samtools merge ~{sample}.bam ~{sep=" " bamFiles}
     >>>
 
     output {

@@ -31,7 +31,7 @@ task ToBam {
     }
 
     command <<<
-        samtools view -Sb -o ~{sample}.align.bam ~{samFile}
+        /usr/local/bin/samtools view -Sb -o ~{sample}.align.bam ~{samFile}
     >>>
 
     output {
@@ -54,7 +54,7 @@ task SortBam {
     }
 
     command <<<
-        samtools sort -o ~{sample}.final.bam ~{alignedBam}
+        /usr/local/bin/samtools sort -o ~{sample}.final.bam ~{alignedBam}
     >>>
 
     output {
