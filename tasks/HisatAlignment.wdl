@@ -113,7 +113,7 @@ task toBam {
     }
 
     command <<<
-        samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{samFile}
+        /usr/local/bin/samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{samFile}
     >>>
 
     output {
