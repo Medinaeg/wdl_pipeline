@@ -1,34 +1,34 @@
 version 1.0
 
-workflow StringTie {
+workflow StringTieFPKM {
     input {
         String sample
         File alignedBam
         File reference_gtf
     }
 
-    call StringTie {
+    call StringTieCommand {
         input:
             sample = sample,
-            bamFile = alignedBam,
+            alignedBam = alignedBam,
             gtf = reference_gtf
     }
 
     output {
-        File fpkmFile = StringTie.fpkmFile
+        File fpkmFile = StringTieCommand.fpkmFile
     }
 }
 
 
-task StringTie{
+task StringTieCommand {
     input {
         String sample
-        File bamFile
+        File alignedBam
         File gtf
     }
 
     command <<<
-        /usr/local/bin/stringtie -G ~{gtf} -e -B -o ~{sample}.transcripts.gtf -A ~{sample}.abundances.tsv ~{bamFile}
+        /usr/local/bin/stringtie -G ~{gtf} -e -B -o ~{sample}.transcripts.gtf -A ~{sample}.abundances.tsv ~{alignedBam}
     >>>
 
     output {
