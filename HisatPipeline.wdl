@@ -11,12 +11,8 @@ workflow myWorkflow {
     input {
         File fofn
         String strandness
-
         String hisat_prefix
         File hisat_index
-        File reference_gtf
-        File kallisto_index
-        File reference_cdna
     }
 
     call splitSamples {
