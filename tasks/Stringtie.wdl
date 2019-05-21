@@ -3,7 +3,6 @@ version 1.0
 workflow StringTie {
     input {
         String sample
-        String outdir
         File alignedBam
         File reference_gtf
     }
@@ -11,7 +10,6 @@ workflow StringTie {
     call StringTie {
         input:
             sample = sample,
-            outdir = outdir,
             bamFile = alignedBam,
             gtf = reference_gtf
     }
@@ -25,7 +23,6 @@ workflow StringTie {
 task StringTie{
     input {
         String sample
-        String outdir
         File bamFile
         File gtf
     }
