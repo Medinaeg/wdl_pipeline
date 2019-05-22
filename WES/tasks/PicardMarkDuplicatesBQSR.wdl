@@ -39,7 +39,7 @@ task PicardMD {
     File referenceFasta = referenceFastaFiles[0]
 
     command <<<
-        java -Xmx1g -jar picard.jar MarkDuplicates I=~{bamFile} O=~{sample}.md.bam ASSUME_SORT_ORDER=coordinate METRICS_FILE=~{sample}.md.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+        java -Xmx1g -jar /usr/gitc/picard.jar MarkDuplicates I=~{bamFile} O=~{sample}.md.bam ASSUME_SORT_ORDER=coordinate METRICS_FILE=~{sample}.md.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
 
         /usr/gitc/gatk4/gatk-launch BaseRecalibrator -I ~{sample}.md.bam -R {referenceFasta} --known-sites ~{thousG} --known-sites ~{knownIndels} --known-sites ~{dbsnp} -O ~{sample}.bqsr.table
 
