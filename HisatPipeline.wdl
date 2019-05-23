@@ -1,10 +1,10 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-# import "./tasks/HisatAlignment.wdl" as Hisat
-# import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
-# import "./tasks/HTSeq2.wdl" as HTSeq
-# import "./tasks/Stringtie.wdl" as StringTie
+#import "./tasks/HisatAlignment.wdl" as Hisat
+#import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
+#import "./tasks/HTSeq2.wdl" as HTSeq
+#import "./tasks/Stringtie.wdl" as StringTie
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/HisatAlignment.wdl" as Hisat
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/MergeAlignedBams.wdl" as MergeAlignedBams
@@ -16,7 +16,7 @@ workflow myWorkflow {
         File fofn
         String strandness
         String hisat_prefix
-        File hisat_index
+        Array[File] hisat_index
         File reference_gtf
     }
 

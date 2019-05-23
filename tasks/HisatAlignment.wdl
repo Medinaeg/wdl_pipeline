@@ -6,7 +6,7 @@ workflow runAlignments {
         Array[Array[String]] fileList # tsv of sample, fastq1/2, index
         String strandness
         String hisatPrefix
-        File hisatIndex
+        Array[File] hisatIndex
     }
 
     scatter (filePair in fileList) {
@@ -78,7 +78,7 @@ task hisatCommand {
         File fastq1
         File fastq2
         String hisatPrefix
-        File hisatIndex
+        Array[File] hisatIndex
         String strandness
         String id
         String pu
@@ -87,7 +87,7 @@ task hisatCommand {
 
     command <<<
         # If reference-data1/myhisat2.tar.gz is used, the directory will look like ./hisat2/GRCh38_HISAT
-        tar -zxvf ~{hisatIndex} -C .
+        # tar -zxvf ~{hisatIndex} -C .
         # Set hisat_prefix to 'hisat2/GRCh38_HISAT2'
 
         /usr/local/bin/hisat2 -p 8 --dta -x ./~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam

@@ -1,7 +1,7 @@
 {
   "myWorkflow.reference_cdna": "gs://reference-data1/Homo_sapiens.GRCh38.cdna.all.fa.gz",
   "myWorkflow.reference_gtf": "gs://reference-data1/Homo_sapiens.GRCh38.94.gtf",
-  "myWorkflow.fofn": "gs://trial-cmp001/fastq_files/trial-cmp001_fofn.txt",
+  "myWorkflow.fofn": "gs://sarcoma_ups_rnaseq_steele/sarcoma_fofn.txt",
   "myWorkflow.strandness": "RF",
   "myWorkflow.kallisto_index": "gs://reference-data1/Homo_sapiens.GRCh38_94.cdna.all.kallisto.index"
 }
