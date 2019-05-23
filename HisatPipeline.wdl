@@ -16,9 +16,11 @@ workflow myWorkflow {
         File fofn
         String strandness
         String hisat_prefix
-        Array[File] hisat_index
+        File hisat_index_file
         File reference_gtf
     }
+
+    Array[File] hisat_index = read_lines(hisat_index_file)
 
     call splitSamples {
         input:
