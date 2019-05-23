@@ -78,7 +78,7 @@ task hisatCommand {
         File fastq1
         File fastq2
         String hisatPrefix
-        Array[File] hisatIndex
+        Array[File]+ hisatIndex
         String strandness
         String id
         String pu
