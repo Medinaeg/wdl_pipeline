@@ -1,9 +1,9 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-#import "./tasks/runBWA.wdl" as BWA
-#import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
-#import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
+# import "./tasks/runBWA.wdl" as BWA
+# import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
+# import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/runBWA.wdl" as BWA
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/MergeAlignedBams.wdl" as MergeAlignedBams
@@ -70,6 +70,7 @@ workflow myWorkflow {
 # 2D. Output aligned BAM files
     output {
         Array[File] outputFinalBams = MDBQSR.finalBam
+        Array[File] outputmetricFile = MDBQSR.metricFile
     }
 }
 
