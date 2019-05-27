@@ -40,7 +40,7 @@ task runPizzly {
     runtime {
         docker: "chrisamiller/docker-pizzly:latest"
         disks: "local-disk 50 SSD"
-        memory: "8G"
+        memory: "4G"
         cpu: 1
     }
 }
