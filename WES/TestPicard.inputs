@@ -3,7 +3,7 @@
   "myWorkflow.pathsToReferenceFastaFiles": "gs://reference-data2/referenceFastaFilePaths.txt",
   "myWorkflow.sample": "CGC020612Breast",
   "myWorkflow.thousG": "gs://reference-data2/keep/Mills_and_1000G_gold_standard.indels.hg38.nochr.vcf.gz",
-  "myWorkflow.bamFile": "gs://dna-dev1/work/myWorkflow/ae1c1c40-b72c-473a-8d04-f117f7c8faba/call-MDBQSR/shard-0/GatkCommands/a59b1d54-ab5d-4022-a90b-8033a5547080/call-PicardMD/CGC020612Breast.md.bam",
+  "myWorkflow.bamFile": "gs://dna-dev1/work/myWorkflow/ae1c1c40-b72c-473a-8d04-f117f7c8faba/call-mergeBams/shard-0/CGC020612Breast.bam",
   "myWorkflow.knownIndels": "gs://reference-data2/keep/Homo_sapiens_assembly38.known_indels.nochr.vcf.gz"
 }
 

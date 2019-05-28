@@ -20,7 +20,7 @@ workflow GatkCommands {
     call GATK4 {
         input:
             sample = sample,
-            bamFile = bamFile,
+            bamFile = PicardMD.finalBam,
             referenceFastaFiles = referenceFastaFiles,
             thousG = thousG,
             knownIndels = knownIndels,
