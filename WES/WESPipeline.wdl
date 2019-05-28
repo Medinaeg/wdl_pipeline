@@ -70,7 +70,6 @@ workflow myWorkflow {
 # 2D. Output aligned BAM files
     output {
         Array[File] outputFinalBams = MDBQSR.finalBam
-        Array[File] outputmetricFile = MDBQSR.metricFile
     }
 }
 
