@@ -11,16 +11,16 @@ workflow GatkCommands {
         File dbsnp
     }
 
-    call PicardMD {
-        input:
-            sample = sample,
-            bamFile = bamFile,
-    }
+    # call PicardMD {
+    #     input:
+    #         sample = sample,
+    #         bamFile = bamFile,
+    # }
 
     call GATK4 {
         input:
             sample = sample,
-            bamFile = PicardMD.finalBam,
+            bamFile = bamFile,
             referenceFastaFiles = referenceFastaFiles,
             thousG = thousG,
             knownIndels = knownIndels,
@@ -32,29 +32,29 @@ workflow GatkCommands {
     }
 }
 
-task PicardMD {
-    input {
-        String sample
-        File bamFile
-    }
+# task PicardMD {
+#     input {
+#         String sample
+#         File bamFile
+#     }
 
-    command <<<
-        java -Xmx1g -jar /usr/gitc/picard.jar MarkDuplicates I=~{bamFile} O=~{sample}.md.bam ASSUME_SORT_ORDER=coordinate METRICS_FILE=~{sample}.md.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
-    >>>
+#     command <<<
+#         java -Xmx1g -jar /usr/gitc/picard.jar MarkDuplicates I=~{bamFile} O=~{sample}.md.bam ASSUME_SORT_ORDER=coordinate METRICS_FILE=~{sample}.md.txt QUIET=true COMPRESSION_LEVEL=0 VALIDATION_STRINGENCY=LENIENT
+#     >>>
 
-    output {
-        File finalBam = "~{sample}.md.bam"
-        File metricFile = "~{sample}.md.txt"
-    }
+#     output {
+#         File finalBam = "~{sample}.md.bam"
+#         File metricFile = "~{sample}.md.txt"
+#     }
 
 
-    runtime {
-        docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
-        disks: "local-disk 100 SSD"
-        memory: "16G"
-        cpu: 2
-    }
-}
+#     runtime {
+#         docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
+#         disks: "local-disk 100 SSD"
+#         memory: "16G"
+#         cpu: 2
+#     }
+# }
 
 task GATK4 {
     input {
@@ -69,9 +69,9 @@ task GATK4 {
     File referenceFasta = referenceFastaFiles[0]
 
     command <<<
-        /usr/gitc/gatk4/gatk-launch BaseRecalibrator -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.bqsr.table --known-sites ~{thousG} --known-sites ~{knownIndels} --known-sites ~{dbsnp}
+        /usr/gitc/gatk4/gatk-launch BaseRecalibrator -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.bqsr.table --knownSites ~{thousG} --knownSites ~{knownIndels} --knownSites ~{dbsnp}
 
-        /usr/gitc/gatk4/gatk-launch ApplyBQSR -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.FINAL.bam -bqsr ~{sample}.bqsr.table --static-quantized-quals 10 --static-quantized-quals 20 --static-quantized-quals 30
+        /usr/gitc/gatk4/gatk-launch ApplyBQSR -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.FINAL.bam -bqsr ~{sample}.bqsr.table --static_quantized_quals 10 --static_quantized_quals 20 --static_quantized_quals 30
     >>>
 
     output {
