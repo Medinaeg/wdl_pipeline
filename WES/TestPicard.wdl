@@ -11,8 +11,11 @@ workflow myWorkflow {
         String sample
         File pathsToReferenceFastaFiles
         File thousG
+        File thousGIndex
         File knownIndels
+        File knownIndelsIndex
         File dbsnp
+        File dbsnpIndex
     }
 
     call getReferenceFiles {
@@ -27,6 +30,9 @@ workflow myWorkflow {
                 referenceFastaFiles = getReferenceFiles.referenceFastaFiles,
                 thousG = thousG,
                 knownIndels = knownIndels,
+                dbsnp = dbsnp,
+                thousGIndex = thousGIndex,
+                knownIndelsIndex = knownIndelsIndex,
                 dbsnp = dbsnp
     }
 

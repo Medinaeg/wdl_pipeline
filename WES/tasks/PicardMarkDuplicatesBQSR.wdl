@@ -7,8 +7,11 @@ workflow GatkCommands {
         File bamFile
         Array[File] referenceFastaFiles
         File thousG
+        File thousGIndex
         File knownIndels
+        File knownIndelsIndex
         File dbsnp
+        File dbsnpIndex
     }
 
     # call PicardMD {
@@ -24,7 +27,10 @@ workflow GatkCommands {
             referenceFastaFiles = referenceFastaFiles,
             thousG = thousG,
             knownIndels = knownIndels,
-            dbsnp = dbsnp
+            dbsnp = dbsnp,
+            thousGIndex = thousGIndex,
+            knownIndelsIndex = knownIndelsIndex,
+            dbsnpIndex = dbsnpIndex
     }
 
     output {
@@ -61,16 +67,17 @@ task GATK4 {
         String sample
         File bamFile
         Array[File] referenceFastaFiles
-        File thousG
+        File thousG 
+        File thousGIndex   
         File knownIndels
-        File dbsnp
+        File knownIndelsIndex
+        File dbsnp   
+        File dbsnpIndex
     }
 
     File referenceFasta = referenceFastaFiles[0]
 
     command <<<
-        /usr/gitc/gatk4/gatk-launch IndexFeatureFile -F ~{thousG}
-
         /usr/gitc/gatk4/gatk-launch BaseRecalibrator -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.bqsr.table -knownSites ~{thousG} -knownSites ~{knownIndels} -knownSites ~{dbsnp}
 
         /usr/gitc/gatk4/gatk-launch ApplyBQSR -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.FINAL.bam -bqsr ~{sample}.bqsr.table --static_quantized_quals 10 --static_quantized_quals 20 --static_quantized_quals 30
