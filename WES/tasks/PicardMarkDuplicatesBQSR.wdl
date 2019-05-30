@@ -69,7 +69,7 @@ task GATK4 {
     File referenceFasta = referenceFastaFiles[0]
 
     command <<<
-        /usr/gitc/gatk4/gatk-launch BaseRecalibrator -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.bqsr.table --knownSites ~{thousG} --knownSites ~{knownIndels} --knownSites ~{dbsnp}
+        /usr/gitc/gatk4/gatk-launch BaseRecalibrator -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.bqsr.table -knownSites ~{thousG} -knownSites ~{knownIndels} -knownSites ~{dbsnp}
 
         /usr/gitc/gatk4/gatk-launch ApplyBQSR -R ~{referenceFasta} -I ~{bamFile} -O ~{sample}.FINAL.bam -bqsr ~{sample}.bqsr.table --static_quantized_quals 10 --static_quantized_quals 20 --static_quantized_quals 30
     >>>
