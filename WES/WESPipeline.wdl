@@ -1,9 +1,9 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-# import "./tasks/runBWA.wdl" as BWA
-# import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
-# import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
+#import "./tasks/runBWA.wdl" as BWA
+#import "./tasks/MergeAlignedBams.wdl" as MergeAlignedBams
+#import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/runBWA.wdl" as BWA
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/MergeAlignedBams.wdl" as MergeAlignedBams
@@ -13,14 +13,13 @@ workflow myWorkflow {
     input {
         File fofn
         File pathsToReferenceFastaFiles
-        File thousG
-        File knownIndels
-        File dbsnp
+        File pathsToGATK4ReferenceFiles
     }
 # Prelim step: Get reference.fa files as bundle
     call getReferenceFiles {
         input:
-            pathsToReferenceFastaFiles = pathsToReferenceFastaFiles
+            pathsToReferenceFastaFiles = pathsToReferenceFastaFiles,
+            pathsToGATK4ReferenceFiles = pathsToGATK4ReferenceFiles
     }
 # 1. Get unique samples from file list (column 1 in fofn)
     call splitSamples {
@@ -61,9 +60,7 @@ workflow myWorkflow {
                 sample = sample,
                 bamFile = outputAlignedBam,
                 referenceFastaFiles = getReferenceFiles.referenceFastaFiles,
-                thousG = thousG,
-                knownIndels = knownIndels,
-                dbsnp = dbsnp
+                referenceGATK4Files = getReferenceFiles.referenceGATK4Files
        }
 
     }
@@ -76,14 +73,17 @@ workflow myWorkflow {
 task getReferenceFiles {
     input {
         File pathsToReferenceFastaFiles
+        File pathsToGATK4ReferenceFiles
     }
 
     command <<<
         cut -f1 ~{pathsToReferenceFastaFiles} >> STDOUT
+        cut -f1 ~{pathsToGATK4ReferenceFiles} >> STDOUT1
     >>>
 
     output {
         Array[File] referenceFastaFiles = read_lines("STDOUT")
+        Array[File] referenceGATK4Files = read_lines("STDOUT1")
     }
 }
 

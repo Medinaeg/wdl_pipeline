@@ -1,9 +1,9 @@
 version 1.0
 
 ##TODO: Add Fastq2 NA if needed/does not exist
-#import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
+import "./tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
+#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/PicardMarkDuplicatesBQSR.wdl" as MarkDuplicatesBQSR
 
 workflow myWorkflow {
     input {
