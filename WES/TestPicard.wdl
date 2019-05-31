@@ -10,17 +10,13 @@ workflow myWorkflow {
         File bamFile
         String sample
         File pathsToReferenceFastaFiles
-        File thousG
-        File thousGIndex
-        File knownIndels
-        File knownIndelsIndex
-        File dbsnp
-        File dbsnpIndex
+        File pathsToGATK4ReferenceFiles
     }
 
     call getReferenceFiles {
         input:
-            pathsToReferenceFastaFiles = pathsToReferenceFastaFiles
+            pathsToReferenceFastaFiles = pathsToReferenceFastaFiles,
+            pathsToGATK4ReferenceFiles = pathsToGATK4ReferenceFiles
     }
 
     call MarkDuplicatesBQSR.GatkCommands as MDBQSR {
@@ -28,12 +24,7 @@ workflow myWorkflow {
                 sample = sample,
                 bamFile = bamFile,
                 referenceFastaFiles = getReferenceFiles.referenceFastaFiles,
-                thousG = thousG,
-                knownIndels = knownIndels,
-                dbsnp = dbsnp,
-                thousGIndex = thousGIndex,
-                knownIndelsIndex = knownIndelsIndex,
-                dbsnp = dbsnp
+                referenceGATK4Files = getReferenceFiles.referenceGATK4Files
     }
 
     output {
@@ -44,13 +35,16 @@ workflow myWorkflow {
 task getReferenceFiles {
     input {
         File pathsToReferenceFastaFiles
+        File pathsToGATK4ReferenceFiles
     }
 
     command <<<
         cut -f1 ~{pathsToReferenceFastaFiles} >> STDOUT
+        cut -f1 ~{pathsToGATK4ReferenceFiles} >> STDOUT1
     >>>
 
     output {
         Array[File] referenceFastaFiles = read_lines("STDOUT")
+        Array[File] referenceGATK4Files = read_lines("STDOUT1")
     }
 }

@@ -1,13 +1,7 @@
 {
-  "myWorkflow.dbsnp": "gs://reference-data2/keep/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.nochr.vcf.gz",
-  "myWorkflow.thousGIndex": "gs://reference-data2/keep/Mills_and_1000G_gold_standard.indels.hg38.nochr.vcf.gz.tbi",
-  "myWorkflow.pathsToReferenceFastaFiles": "gs://reference-data2/referenceFastaFilePaths.txt",
-  "myWorkflow.sample": "CGC020612Breast",
-  "myWorkflow.thousG": "gs://reference-data2/keep/Mills_and_1000G_gold_standard.indels.hg38.nochr.vcf.gz",
-  "myWorkflow.MDBQSR.dbsnpIndex": "File",
   "myWorkflow.bamFile": "gs://dna-dev1/output/CGC020612Breast.md.bam",
-  "myWorkflow.knownIndelsIndex": "gs://reference-data2/keep/Homo_sapiens_assembly38.known_indels.nochr.vcf.gz.tbi",
-  "myWorkflow.dbsnpIndex": "gs://reference-data2/keep/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.nochr.vcf.gz.tbi",
-  "myWorkflow.knownIndels": "gs://reference-data2/keep/Homo_sapiens_assembly38.known_indels.nochr.vcf.gz"
+  "myWorkflow.sample": "CGC020612Breast",
+  "myWorkflow.pathsToGATK4ReferenceFiles": "gs://reference-data2/keep/referenceGATK4FilePaths.txt",
+  "myWorkflow.pathsToReferenceFastaFiles": "gs://reference-data2/referenceFastaFilePaths.txt"
 }
 
