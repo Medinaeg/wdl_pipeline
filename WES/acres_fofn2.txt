@@ -1,4 +1,0 @@
-CGC_normal	gs://dna-dev1/fastq_files/CGC_normal_S4_L007_R1_001.fastq.gz	gs://dna-dev1/fastq_files/CGC_normal_S4_L007_R2_001.fastq.gz
-CGC_normal	gs://dna-dev1/fastq_files/CGC_normal_S4_L008_R1_001.fastq.gz	gs://dna-dev1/fastq_files/CGC_normal_S4_L008_R2_001.fastq.gz
-CGC020612Breast	gs://dna-dev1/fastq_files/CGC020612Breast_S2_L007_R1_001.fastq.gz	gs://dna-dev1/fastq_files/CGC020612Breast_S2_L007_R2_001.fastq.gz
-CGC020612Breast	gs://dna-dev1/fastq_files/CGC020612Breast_S2_L008_R1_001.fastq.gz	gs://dna-dev1/fastq_files/CGC020612Breast_S2_L008_R2_001.fastq.gz

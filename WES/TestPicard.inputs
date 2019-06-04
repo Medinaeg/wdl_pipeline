@@ -1,7 +1,0 @@
-{
-  "myWorkflow.bamFile": "gs://dna-dev1/output/CGC020612Breast.md.bam",
-  "myWorkflow.sample": "CGC020612Breast",
-  "myWorkflow.pathsToGATK4ReferenceFiles": "gs://reference-data2/keep/referenceGATK4FilePaths.txt",
-  "myWorkflow.pathsToReferenceFastaFiles": "gs://reference-data2/referenceFastaFilePaths.txt"
-}
-
