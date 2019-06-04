@@ -20,7 +20,10 @@ workflow myWorkflow {
         File reference_gtf
     }
 
-    Array[File] hisat_index = read_lines(hisat_index_file)
+    call getHisatFiles {
+        input:
+            hisat_index_file = hisat_index_file
+    }
 
     call splitSamples {
         input:
@@ -44,7 +47,7 @@ workflow myWorkflow {
                 fileList = getSamplesPerIndex.pairedFileList,
                 strandness = strandness,
                 hisatPrefix = hisat_prefix,
-                hisatIndex = hisat_index
+                hisatIndex = getHisatFiles.hisat_index
         }
 
         if ( getSamplesPerIndex.nPairsOfFastqs > 1 ) {
@@ -77,6 +80,20 @@ workflow myWorkflow {
         Array[File] outputAlignedBams = outputAlignedBam
         Array[File] outputcountsFile = HTSeq.countsFile
         Array[File] outputfpkmFile = StringTie.fpkmFile
+    }
+}
+
+task getHisatFiles {
+    input {
+        File hisat_index_file
+    }
+
+    command <<<
+        cut -f1 ~{hisat_index_file} >> STDOUT
+    >>>
+
+    output {
+        Array[File] hisat_index = read_lines("STDOUT")
     }
 }
 

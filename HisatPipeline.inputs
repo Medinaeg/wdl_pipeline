@@ -1,6 +1,6 @@
 {
   "myWorkflow.reference_gtf": "gs://reference-data1/Homo_sapiens.GRCh38.94.gtf",
-  "myWorkflow.hisat_index": "gs://reference-data1/hisat2/files.txt",
+  "myWorkflow.hisat_index_file": "gs://reference-data1/hisat2/files.txt",
   "myWorkflow.fofn": "gs://trial-cmp001/fastq_files/trial-cmp001_fofn2.txt",
   "myWorkflow.strandness": "RF",
   "myWorkflow.hisat_prefix": "hisat2/GRCh38_HISAT2"
