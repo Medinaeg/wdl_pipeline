@@ -1,0 +1,8 @@
+{
+  "runBWA.j": "3",
+  "runBWA.referenceFasta": "gs://reference-data2/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa",
+  "runBWA.fastq1": "gs://dna-dev1/fastq_files/CGC_normal_S4_L007_R1_001.fastq.gz",
+  "runBWA.fastq2": "gs://dna-dev1/fastq_files/CGC_normal_S4_L007_R2_001.fastq.gz",
+  "runBWA.sample": "CGC_normal"
+}
+
