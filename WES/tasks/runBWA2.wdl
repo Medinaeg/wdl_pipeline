@@ -6,16 +6,16 @@ workflow runBWA {
         Int j
         File fastq1
         File fastq2
-        File referenceFasta
+        File referenceFasta 
     }
 
     call BWACommand {
-        input:
-            j = j,
-            sample = sample,
-            fastq1 = fastq1,
-            fastq2 = fastq2,
-            referenceFasta = referenceFasta
+            input:
+                j = j,
+                sample = sample,
+                fastq1 = fastq1,
+                fastq2 = fastq2,
+                referenceFasta = referenceFasta,
         }
 
     output {
@@ -33,13 +33,10 @@ task BWACommand {
     }
 
     command <<<
-       id=~(zcat < ~{fastq1} | head -n 1 | cut -f 1-4 -d":" | sed 's/@//' | sed 's/:/./g')
-       pu=~(zcat < ~{fastq1} | head -n 1 | cut -f 3-4 -d":" | sed 's/@//' | sed 's/:/./g')
-       sm=~(zcat < ~{fastq1} | head -n 1 | grep -Eo "[ATGCN]+$")
-       echo ~{id} >> Look
-       echo ~{pu} >> Look
-       echo ~{sm} >> Look
-       echo "/usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~{id}\tPU:~{pu}.~{sm}\tSM:~{sample}\tLB:~{id}.~{sm}\tPL:ILLUMINA\tCN:UCLA" ~{referenceFasta} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam" >> Look 
+        id=~(zcat < ~{fastq1} | head -n 1 | cut -f 1-4 -d":" | sed 's/@//' | sed 's/:/./g')
+        pu=~(zcat < ~{fastq1} | head -n 1 | cut -f 3-4 -d":" | sed 's/@//' | sed 's/:/./g')
+        sm=~(zcat < ~{fastq1} | head -n 1 | grep -Eo "[ATGCN]+$")        
+        echo "/usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~id\tPU:~pu.~sm\tSM:~{sample}\tLB:~id.~sm\tPL:ILLUMINA\tCN:UCLA" ~{referenceFasta} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam" >> Look
     >>>
 
     output {
