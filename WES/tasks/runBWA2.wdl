@@ -36,7 +36,7 @@ task BWACommand {
         id=~(zcat < ~{fastq1} | head -n 1 | cut -f 1-4 -d":" | sed 's/@//' | sed 's/:/./g')
         pu=~(zcat < ~{fastq1} | head -n 1 | cut -f 3-4 -d":" | sed 's/@//' | sed 's/:/./g')
         sm=~(zcat < ~{fastq1} | head -n 1 | grep -Eo "[ATGCN]+$")        
-        echo "/usr/gitc/bwa mem -K 100000000 -t 8 -R "@RG\tID:~id\tPU:~pu.~sm\tSM:~{sample}\tLB:~id.~sm\tPL:ILLUMINA\tCN:UCLA" ~{referenceFasta} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam" >> Look
+        echo "/usr/gitc/bwa mem -K 100000000 -t 8 -R @RG\tID:~id\tPU:~pu.~sm\tSM:~{sample}\tLB:~id.~sm\tPL:ILLUMINA\tCN:UCLA ~{referenceFasta} ~{fastq1} ~{fastq2} > ~{sample}.~{j}.sam" >> Look
     >>>
 
     output {
