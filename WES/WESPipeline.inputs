@@ -1,6 +1,6 @@
 {
   "myWorkflow.pathsToReferenceFastaFiles": "gs://reference-data2/referenceFastaFilePaths.txt",
-  "myWorkflow.fofn": "gs://dna-dev1/acres_fofn_batch2.txt",
+  "myWorkflow.fofn": "gs://dna-dev1/acres_fofn_batch2.1.txt",
   "myWorkflow.pathsToGATK4ReferenceFiles": "gs://reference-data2/keep/referenceGATK4FilePaths.txt"
 }
 
