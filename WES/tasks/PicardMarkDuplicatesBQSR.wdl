@@ -50,7 +50,7 @@ task PicardMD {
     runtime {
         docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
         disks: "local-disk 100 SSD"
-        memory: "16G"
+        memory: "8G"
         cpu: 2
     }
 }

@@ -88,8 +88,8 @@ task Samblaster {
     runtime {
         docker: "mgibio/alignment_helper-cwl:1.0.0"
         disks: "local-disk 100 SSD"
-        memory: "8G"
-        cpu: 2
+        memory: "16G"
+        cpu: 4
     }
 
 }
