@@ -14,7 +14,13 @@ workflow runAlignments {
         File fastq2 = filePair[2]
         Int j = filePair[3]
 
-        call runHisat {
+        call getReadInfo {
+            input:
+                sample = sample,
+                fastq1 = fastq1
+        }
+
+        call hisatCommand {
             input:
                 j = j,
                 sample = sample,
@@ -32,7 +38,7 @@ workflow runAlignments {
             input:
                 j = j,
                 sample = sample,
-                samFile = runHisat.samFile
+                samFile = hisatCommand.samFile
         }
     }
 
@@ -41,7 +47,31 @@ workflow runAlignments {
     }
 }
 
-task runHisat {
+task getReadInfo {
+    input {
+        String sample
+        File fastq1
+    }
+
+    command <<<
+        zcat < ~{fastq1} | head -n 1 | cut -f 1-4 -d":" | sed 's/@//' | sed 's/:/./g' >> FastqInfo
+        zcat < ~{fastq1} | head -n 1 | cut -f 3-4 -d":" | sed 's/@//' | sed 's/:/./g' >> FastqInfo
+        zcat < ~{fastq1} | head -n 1 | grep -Eo "[ATGCN]+$" >> FastqInfo
+    >>>
+
+    output {
+        Array[String] FastqInfo = read_lines("FastqInfo")
+    }
+
+    runtime {
+        docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
+        disks: "local-disk 25 SSD"
+        memory: "8G"
+        cpu: 1
+    }
+}
+
+task hisatCommand {
     input {
         Int j
         String sample
@@ -50,19 +80,26 @@ task runHisat {
         String hisatPrefix
         Array[File]+ hisatIndex
         String strandness
+        String id
+        String pu
+        String sm
     }
 
     command <<<
-        id=$(zcat < ~{fastq1} | head -n 1 | cut -f 1-4 -d":" | sed 's/@//' | sed 's/:/./g')
-        pu=$(zcat < ~{fastq1} | head -n 1 | cut -f 3-4 -d":" | sed 's/@//' | sed 's/:/./g')
-        sm=$(zcat < ~{fastq1} | head -n 1 | grep -Eo "[ATGCN]+$")
+        # If reference-data1/myhisat2.tar.gz is used, the directory will look like ./hisat2/GRCh38_HISAT
+        # tar -zxvf ~{hisatIndex} -C .
+        # Set hisat_prefix to 'hisat2/GRCh38_HISAT2'
 
-        /usr/local/bin/hisat2 -p 8 --dta -x ~{hisat} --rg-id $id --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:$id --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} ~{fastq2} -S ~{sample}.~{j}.align.sam
+        ls ~{hisatPrefix} >> STDOUT
+
+#        /usr/local/bin/hisat2 -p 8 --dta -x ~{hisatPrefix} --rg-id ~{id} --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:~{id}.~{sm} --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} -2 ~{fastq2} -S ~{sample}.~{j}.align.sam
     >>>
 
-    output {
-        File samFile = "~{sample}.~{j}.align.sam"
-    }
+     output {
+         File samFile = "STDOUT"
+#         File samFile =  "~{sample}.~{j}.align.sam"
+
+     }
 
     runtime {
         docker: "zlskidmore/hisat2:latest"
