@@ -22,10 +22,7 @@ workflow runAlignments {
                 fastq2 = fastq2,
                 hisatPrefix = hisatPrefix,
                 hisatIndex = hisatIndex,
-                strandness = strandness,
-                id = getReadInfo.FastqInfo[0],
-                pu = getReadInfo.FastqInfo[1],
-                sm = getReadInfo.FastqInfo[2]
+                strandness = strandness
         }
 
         call toBam {
@@ -57,7 +54,7 @@ task runHisat {
         pu=$(zcat < ~{fastq1} | head -n 1 | cut -f 3-4 -d":" | sed 's/@//' | sed 's/:/./g')
         sm=$(zcat < ~{fastq1} | head -n 1 | grep -Eo "[ATGCN]+$")
 
-        /usr/local/bin/hisat2 -p 8 --dta -x ~{hisat} --rg-id $id --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:$id --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} ~{fastq2} -S ~{sample}.~{j}.align.sam
+        /usr/local/bin/hisat2 -p 8 --dta -x ~{hisatPrefix} --rg-id $id --rg PL:ILLUMINA --rg PU:~{sample} --rg LB:$id --rg SM:~{sample} --rna-strandness ~{strandness} -1 ~{fastq1} ~{fastq2} -S ~{sample}.~{j}.align.sam
     >>>
 
     output {
