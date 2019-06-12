@@ -62,7 +62,7 @@ task runHisat {
 
     runtime {
         docker: "zlskidmore/hisat2:latest"
-        disks: "local-disk 150 SSD"
+        disks: "local-disk 500 SSD"
         memory: "16G"
         cpu: 1
     }
@@ -85,7 +85,7 @@ task toBam {
 
     runtime {
         docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
-        disks: "local-disk 150 SSD"
+        disks: "local-disk 500 SSD"
         memory: "8G"
         cpu: 1
     }
