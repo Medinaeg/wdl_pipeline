@@ -53,7 +53,7 @@ task Mutect2 {
     }
 
     command <<<     
-    /usr/gitc/gatk4/gatk-launch Mutect2 -R ~{referenceFile} -I ~{tumorbamFile} -tumor ~{tumorFileName} -I ~{normalbamFile} -normal ~{normalFileName} -O ~{sample}.~{j}.vcf.gz -L ~{intervalFile}
+        /usr/gitc/gatk4/gatk-launch Mutect2 -R ~{referenceFile} -I ~{tumorbamFile} -tumor ~{tumorFileName} -I ~{normalbamFile} -normal ~{normalFileName} -O ~{sample}.~{j}.vcf.gz -L ~{intervalFile}
     >>>
 
     output{
@@ -76,11 +76,11 @@ task MergeVCFs {
     }
 
     command <<<
-    
+        vcf-concat ~{sep=" " vcfFiles} | gzip -c > ~{sample}.FINALmerged.vcf.gz
     >>>
 
     output {
-        File mergedVCFfiles = "~{sample}.FINAL.mergedVCF.vcf.gz"
+        File mergedVCFfiles = "~{sample}.FINALmerged.vcf.gz"
     }
 
     runtime {
