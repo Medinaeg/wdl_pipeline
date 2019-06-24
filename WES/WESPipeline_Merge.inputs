@@ -1,6 +1,6 @@
 {
   "myWorkflow.pathsToReferenceFastaFiles": "gs://reference-data1/referenceFastaFilePaths.txt",
-  "myWorkflow.fofn": "gs://acquired_resistance/fastq_files/fofn_batch3.txt",
+  "myWorkflow.fofn": "gs://acquired_resistance/fastq_files/fofn_batch4.txt",
   "myWorkflow.pathsToGATK4ReferenceFiles": "gs://reference-data1/keep/referenceGATK4FilePaths.txt"
 }
 
