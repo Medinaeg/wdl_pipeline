@@ -1,7 +1,7 @@
 {
   "SomaticVaraintDetection.interval_list": "gs://reference-data1/splitIntervals/pathstoIntervals.txt",
-  "SomaticVaraintDetection.fofn_bams": "gs://trial-cmp001/acquired_resistance/aligned_bams/fofn_bams.txt",
   "SomaticVaraintDetection.gnomad_vcf": "gs://reference-data1/keep/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.nochr.vcf.gz",
-  "SomaticVaraintDetection.reference_fasta": "File"
+  "SomaticVaraintDetection.reference_fasta": "gs://reference-data1/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa",
+  "SomaticVaraintDetection.fofn_bams": "gs://acquired_resistance/FinalBams/runVarscan.txt"
 }
 

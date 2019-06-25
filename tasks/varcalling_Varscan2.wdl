@@ -20,7 +20,6 @@ workflow runVarscan2 {
             tumor_sample = tumor_sample,
             normal_bam = normal_bam,
             normal_bam_index = normal_bam_index
-        }
     }
 
     output {
