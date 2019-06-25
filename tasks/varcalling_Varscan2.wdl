@@ -40,7 +40,7 @@ task Varscan {
 
     #Change for specific need. These are default values.
     Int strand_filter = 0
-    Float min_coverage = 20
+    Int min_coverage = 20
     Float min_var_frequency = 0.05
     Float p_value = 0.99
 
