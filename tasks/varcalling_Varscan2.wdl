@@ -45,7 +45,7 @@ task Varscan {
     Float p_value = 0.99
 
     command <<<
-        ./usr/bin/varscan_helper.sh ~{tumor_bam} ~{normal_bam} ~{reference_fasta} ~{strand_filter} ~{min_coverage} ~{min_var_frequency} ~{p_value}
+        /usr/bin/varscan_helper.sh ~{tumor_bam} ~{normal_bam} ~{reference_fasta} ~{strand_filter} ~{min_coverage} ~{min_var_frequency} ~{p_value}
     >>>
 
     output {

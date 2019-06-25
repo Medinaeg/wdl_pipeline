@@ -2,10 +2,10 @@ version 1.0
 
 #import "./tasks/varcalling_Mutect2.wdl" as Mutect
 #import "./tasks/concatVCFs.wdl" as concat
-import "./tasks/varcalling_Varscan2.wdl" as Varscan
+#import "./tasks/varcalling_Varscan2.wdl" as Varscan
 
 #import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_Mutect2.wdl" as Mutect
-#import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_Varscan2.wd" as Varscan
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_Varscan2.wdl" as Varscan
 #import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_Strelka.wdl" as Strelka
 #import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 
@@ -55,7 +55,7 @@ workflow SomaticVaraintDetection{
         }
 
     }
-    
+
     output {
     #    Array[File] outputvcfFiles = concat.concatVCFfiles
         Array[File] outputsnpFiles = Varscan.snpFile
