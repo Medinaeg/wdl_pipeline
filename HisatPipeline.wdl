@@ -8,8 +8,6 @@ version 1.0
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/HisatAlignment.wdl" as Hisat
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/MergeAlignedBams.wdl" as MergeAlignedBams
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/HTSeq2.wdl" as HTSeq
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/Stringtie.wdl" as StringTie
 
 workflow myWorkflow {
     input {
@@ -58,26 +56,10 @@ workflow myWorkflow {
 
         File outputAlignedBam = select_first([mergeBams.mergedBam, Hisat.bamFile[0]])
 
-        call HTSeq.HTSeq2 as HTSeq {
-            input:
-                sample = sample,
-                alignedBam = outputAlignedBam,
-                reference_gtf = reference_gtf
-        }
-
-        call StringTie.StringTieFPKM as StringTie {
-            input:
-                sample = sample,
-                alignedBam = outputAlignedBam,
-                reference_gtf = reference_gtf
-        }
-
     }
 
     output {
         Array[File] outputAlignedBams = outputAlignedBam
-        Array[File] outputcountsFile = HTSeq.countsFile
-        Array[File] outputfpkmFile = StringTie.fpkmFile
     }
 }
 
