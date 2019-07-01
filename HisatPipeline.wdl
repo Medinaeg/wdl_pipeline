@@ -45,8 +45,7 @@ workflow myWorkflow {
                 hisatIndex = hisat_index
         }
 
-        Int nPairs = array_length(getSamplesPerIndex.pairedFileList)
-        if ( nPairs > 1) {
+        if ( getSamplesPerIndex.nPairsOfFastqs > 1) {
             call MergeAlignedBams.mergeBams as mergeBams {
                 input:
                     sample = sample,
