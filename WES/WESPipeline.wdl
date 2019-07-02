@@ -64,17 +64,10 @@ workflow myWorkflow {
                 referenceGATK4Files = getReferenceFiles.referenceGATK4Files
        }
 
-       call IndexBamFiles.IndexBam as IndexBam {
-            input:
-                sample = sample,
-                bamFile = MDBQSR.finalBam,
-       }
-
     }
 # 2D. Output aligned BAM files
     output {
         Array[File] outputFinalBams = MDBQSR.finalBam
-        Array[File] outputFinalIndexedBams = IndexBam.IndexedBamFile
     }
 }
 
