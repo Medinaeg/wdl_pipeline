@@ -9,6 +9,7 @@ task Varscan {
         File normal_bam
         File normal_bam_index
         File reference_fasta
+        File reference_fasta_index
     }
 
     command <<<

@@ -12,9 +12,10 @@ import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/var
 workflow SomaticVaraintDetection{
     input {
         File fofn_bams
-        File interval_list
+        #File interval_list
         File reference_fasta
-        File gnomad_vcf
+        File reference_fasta_index
+        #File gnomad_vcf
     }
 
     Array[Array[String]] map_bams = read_tsv(fofn_bams)
@@ -47,6 +48,7 @@ workflow SomaticVaraintDetection{
         call Varscan.runVarscan2 as Varscan {
             input:
                 reference_fasta = reference_fasta,
+                reference_fasta_index =reference_fasta_index,
                 tumor_bam = tumor_bam,
                 tumor_bam_index = tumor_bam_index,
                 tumor_sample = tumor_sample,
