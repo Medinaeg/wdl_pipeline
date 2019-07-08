@@ -19,8 +19,8 @@ task runStrelka {
     >>>
 
     output {
-        File indelFile = "results/variants/~{tumorSample}.somatic.indels.vcf.gz"
-        File snvFile = "results/variants/~{tumorSample}.somatic.snvs.vcf.gz"
+        File indelFile = "results/variants/~{tumorSample}.Strelka.somatic.indels.vcf.gz"
+        File snvFile = "results/variants/~{tumorSample}.Strelka.somatic.snvs.vcf.gz"
     }
 
     runtime {
