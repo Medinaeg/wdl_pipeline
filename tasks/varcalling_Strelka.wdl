@@ -4,6 +4,7 @@ task runStrelka {
     input {
         File normalBam
         File normalBamIndex
+        String tumorSample
         File tumorBam
         File tumorBamIndex
         File referenceFasta
@@ -18,8 +19,8 @@ task runStrelka {
     >>>
 
     output {
-        File indelFile = "results/variants/somatic.indels.vcf.gz"
-        File snvFile = "results/variants/somatic.snvs.vcf.gz"
+        File indelFile = "results/variants/~{tumorSample}.somatic.indels.vcf.gz"
+        File snvFile = "results/variants/~{tumorSample}.somatic.snvs.vcf.gz"
     }
 
     runtime {
