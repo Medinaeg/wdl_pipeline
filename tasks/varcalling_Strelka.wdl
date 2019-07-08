@@ -6,10 +6,11 @@ task runStrelka {
         File normalBamIndex
         File tumorBam
         File tumorBamIndex
-        Array[File] referenceFastaFiles
+        File referenceFasta
+        File referenceFastafai
     }
 
-    File referenceFasta = referenceFastaFiles[0]
+#    File referenceFasta = referenceFastaFiles[0]
 
     command <<<
         /opt/strelka/bin/configureStrelkaSomaticWorkflow.py --normalBam=~{normalBam} --tumorBam=~{tumorBam} --referenceFasta=~{referenceFasta} --exome --runDir=$PWD
@@ -24,7 +25,7 @@ task runStrelka {
     runtime {
         docker: "mgibio/strelka-cwl:2.9.9"
         disks: "local-disk 400 SSD"
-        memory: "32G"
-        cpu: 2
+        memory: "64G"
+        cpu: 8
     }
 }
