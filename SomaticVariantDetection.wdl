@@ -66,7 +66,7 @@ workflow SomaticVaraintDetection{
                 normalBamIndex = normal_bam_index,
                 tumorSample = tumor_sample,
                 tumorBam = tumor_bam,
-                tumorBam = tumor_bam_index,
+                tumorBamIndex = tumor_bam_index,
                 referenceFasta = reference_fasta,
                 referenceFastafai = reference_fasta_index
         }
