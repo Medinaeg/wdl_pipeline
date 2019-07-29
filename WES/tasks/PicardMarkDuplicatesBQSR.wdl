@@ -1,28 +1,6 @@
 version 1.0
 
-workflow GatkCommands {
-
-    input {
-        String sample
-        File bamFile
-        Array[File] referenceFastaFiles
-        Array[File] referenceGATK4Files
-    }
-
-    call PicardMD {
-        input:
-            sample = sample,
-            bamFile = bamFile,
-            referenceFastaFiles = referenceFastaFiles,
-            referenceGATK4Files = referenceGATK4Files        
-    }
-    
-    output {
-        File finalBam = PicardMD.finalBam
-    }
-}
-
-task PicardMD {
+task runPicardMD_Gatk {
     input {
         String sample
         File bamFile

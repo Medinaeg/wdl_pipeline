@@ -55,7 +55,7 @@ workflow myWorkflow {
 
        File outputAlignedBam = select_first([mergeBams.mergedBam, BWA.bamFile[0]])
 
-       call MarkDuplicatesBQSR.GatkCommands as MDBQSR {
+       call MarkDuplicatesBQSR.runPicardMD_Gatk as MDBQSR {
             input:
                 sample = sample,
                 bamFile = outputAlignedBam,
