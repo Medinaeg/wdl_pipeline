@@ -1,6 +1,0 @@
-{
-  "SomaticVaraintDetection.reference_fasta_index": "gs://reference-data1/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.fai",
-  "SomaticVaraintDetection.fofn_bams": "gs://acquired_resistance/FinalBams/fofn_GMLung_RAS_baseline.txt",
-  "SomaticVaraintDetection.reference_fasta": "gs://reference-data1/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
-}
-
