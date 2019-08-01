@@ -5,6 +5,7 @@ task createSequenzaFile {
         File tumorBam
         File normalBam
         File referenceFasta
+        File referenceFastaIndex
         File gcWiggle
         String tumorSample
     }

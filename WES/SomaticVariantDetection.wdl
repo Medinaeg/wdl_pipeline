@@ -70,6 +70,7 @@ workflow SomaticVaraintDetection {
                 tumorBam = tumorBam,
                 normalBam = normalBam,
                 referenceFasta = reference_fasta,
+                referenceFastaIndex = reference_fasta_index,
                 gcWiggle = gcWiggle,
                 tumorSample = tumorSample
         }
