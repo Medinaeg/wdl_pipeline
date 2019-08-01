@@ -2,9 +2,11 @@ version 1.0
 
 #import "./tasks/varcalling_Varscan2wdl" as Varscan
 #import "./tasks/varcalling_Strelka.wdl" as Strelka
+#import "./tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_Varscan2.wdl" as Varscan
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/tasks/varcalling_Strelka.wdl" as Strelka
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Varscan2.wdl" as Varscan
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Strelka.wdl" as Strelka
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 
 workflow SomaticVaraintDetection {
     input {
@@ -51,6 +53,15 @@ workflow SomaticVaraintDetection {
                 referenceFastafai = reference_fasta_index
         }
 
+        call SomaticSniper.runSomaticSniper as SomaticSniper {
+            input:
+                tumor_Sample = tumorSample,
+                tumor_Bam = tumorBam,
+                normal_Bam = normalBam,
+                referenceFasta = reference_fasta,
+                referenceFastaIndex = reference_fasta_index
+        }
+
     }
 
     output {
@@ -62,6 +73,7 @@ workflow SomaticVaraintDetection {
         Array[File] outputVarscanindelFiles = Varscan.indelFile
         Array[File] outputStrelkaindelFiles = Strelka.indelFile
         Array[File] outputStrelkasnvFile = Strelka.snvFile
+        Array[File] outputSomaticSniperFile = SomaticSniper.somaticsniperVariants
     }
     
 }

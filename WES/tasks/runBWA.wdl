@@ -25,19 +25,14 @@ workflow runBWA {
         call Samblaster {
             input:
                 sample = sample,
+                j = j,
                 samFile = BWACommand.samFile
         }
 
-        call toBam {
-            input:
-                j = j,
-                sample = sample,
-                blastsamFile = Samblaster.blastsamFile
-        }
     }
 
     output {
-        Array[File] bamFile = toBam.bamFile
+        Array[File] bamFile = Samblaster.bamFile
     }
 }
 
@@ -75,14 +70,17 @@ task Samblaster {
     input {
         String sample
         File samFile
+        Int j
     }
 
     command <<<
-        /usr/local/bin/samblaster -a --addMateTags -i ~{samFile} -o ~{sample}.blast.sam
+        /usr/local/bin/samblaster -a --addMateTags -i ~{samFile} -o ~{sample}.~{j}.blast.sam
+
+        /usr/bin/samtools sort -@ -8 -o ~{sample}.final.bam ~{sample}.~{j}.blast.sam
     >>>
 
     output {
-        File blastsamFile = "~{sample}.blast.sam"
+        File bamFile = "~{sample}.~{j}.final.bam"
     }
 
     runtime {
@@ -92,27 +90,4 @@ task Samblaster {
         cpu: 1
     }
 
-}
-
-task toBam {
-    input {
-        String sample
-        Int j
-        File blastsamFile
-    }
-
-    command <<<
-        /usr/local/bin/samtools sort -@ -8 -o ~{sample}.~{j}.final.bam ~{blastsamFile}
-    >>>
-
-    output {
-        File bamFile = "~{sample}.~{j}.final.bam"
-    }
-
-    runtime {
-        docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
-        disks: "local-disk 500 SSD"
-        memory: "16G"
-        cpu: 1
-    }
 }
