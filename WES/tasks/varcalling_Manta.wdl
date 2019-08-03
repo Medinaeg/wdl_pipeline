@@ -28,7 +28,7 @@ task runManta {
         File diploidFile = "results/variants/~{tumor_sample}.Manta.diploidSV.vcf.gz"
         File somaticFile = "results/variants/~{tumor_sample}.Manta.somaticSV.vcf.gz"
         File candidateFile = "results/variants/~{tumor_sample}.Manta.candidateSV.vcf.gz"
-        File candidateSmallIndelsFiles = "results/variants/~{tumor_sample}.Manta.candidateSmallIndels.vcf.gz"
+        File candidateSmallIndelsFile = "results/variants/~{tumor_sample}.Manta.candidateSmallIndels.vcf.gz"
     }
 
     runtime {

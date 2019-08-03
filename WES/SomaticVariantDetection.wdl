@@ -4,11 +4,13 @@ version 1.0
 #import "./tasks/varcalling_Strelka.wdl" as Strelka
 #import "./tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 #import "./tasks/createSequenza.wdl" as Sequenza
+#import "./tasks/varcalling_Manta.wdl" as Manta
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Varscan2.wdl" as Varscan
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Strelka.wdl" as Strelka
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/createSequenza.wdl" as Sequenza
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Manta.wdl" as Manta
 
 workflow SomaticVaraintDetection {
     input {
@@ -75,6 +77,17 @@ workflow SomaticVaraintDetection {
                 tumorSample = tumorSample
         }
 
+        call Manta.runManta as Manta {
+            input:
+                normal_bam = normalBam,
+                normal_bamindex = processBam.normalBamIndex,
+                tumor_bam = tumorBam,
+                tumor_bamindex = processBam.tumorBamIndex,
+                reference_fasta = reference_fasta,
+                reference_fasta_index = reference_fasta_index,
+                tumor_sample = tumorSample
+        }
+
     }
 
     output {
@@ -89,6 +102,10 @@ workflow SomaticVaraintDetection {
         Array[File] outputSomaticSniperFile = SomaticSniper.somaticsniperVariants
         Array[File] outputSequenzaFile = Sequenza.sequenzaFile
         Array[File] outputbinnedSequenzaFile = Sequenza.trimmedsequenza
+        Array[File] outputdiploidFile = Manta.diploidFile
+        Array[File] outputsomaticFile = Manta.somaticFile
+        Array[File] outputcandidateFile = Manta.candidateFile
+        Array[File] outputcandidateSmallIndelsFile = Manta.candidateSmallIndelsFile
     }
     
 }
