@@ -52,9 +52,9 @@ workflow myWorkflow {
                     bamFiles = BWA.bamFile
             }
         }
-
+# 3. Specify aligned sorted bam either from direct output or merge bams
        File outputAlignedBam = select_first([mergeBams.mergedBam, BWA.bamFile[0]])
-
+# 4. Run Mark Duplicate, Base Recalibrator and Apply BQSR on aligned sorted bam
        call MarkDuplicatesBQSR.runPicardMD_Gatk as MDBQSR {
             input:
                 sample = sample,
@@ -64,7 +64,7 @@ workflow myWorkflow {
        }
 
     }
-# 2D. Output aligned BAM files
+# 5. Output final process BAM files
     output {
         Array[File] outputFinalBams = MDBQSR.finalBam
     }

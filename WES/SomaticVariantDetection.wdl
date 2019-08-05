@@ -19,7 +19,7 @@ workflow SomaticVaraintDetection {
         File reference_fasta_index
         File gcWiggle
     }
-
+# Prelim step: Convert fofn_bams_paired to Array for scatter
     Array[Array[String]] map_bams = read_tsv(fofn_bams_paired)
 
     scatter (pair in map_bams) {
@@ -27,7 +27,7 @@ workflow SomaticVaraintDetection {
         File tumorBam = pair[1]
         String normalSample = pair[2]
         File normalBam = pair[3]
-
+# 1. Gather information of bam through flagstat and indexes bams
         call processBam {
             input:
                 tumorSample = tumorSample,
@@ -35,7 +35,7 @@ workflow SomaticVaraintDetection {
                 normalSample = normalSample,
                 normalBam = normalBam
         }
-
+# 2. Run Varscan on paired tumor/normal
         call Varscan.runVarscan as Varscan {
             input:
                 reference_fasta = reference_fasta,
@@ -46,7 +46,7 @@ workflow SomaticVaraintDetection {
                 normal_bam = normalBam,
                 normal_bam_index = processBam.normalBamIndex
         }
-
+# 3. Run Strelks on paired tumor/normal
         call Strelka.runStrelka as Strelka {
             input:
                 normalbam = normalBam,
@@ -57,7 +57,7 @@ workflow SomaticVaraintDetection {
                 referenceFasta = reference_fasta,
                 referenceFastafai = reference_fasta_index
         }
-
+# 4. Run Somatic Sniper on paired tumor/normal
         call SomaticSniper.runSomaticSniper as SomaticSniper {
             input:
                 tumor_Sample = tumorSample,
@@ -66,7 +66,7 @@ workflow SomaticVaraintDetection {
                 referenceFasta = reference_fasta,
                 referenceFastaIndex = reference_fasta_index
         }
-
+# 5. Processes bams to Seqz file for further processing in R with sequenza package
         call Sequenza.createSequenzaFile as Sequenza {
             input:
                 tumorBam = tumorBam,
@@ -76,7 +76,7 @@ workflow SomaticVaraintDetection {
                 gcWiggle = gcWiggle,
                 tumorSample = tumorSample
         }
-
+# 6. Run Manta on paired tumor/normal
         call Manta.runManta as Manta {
             input:
                 normal_bam = normalBam,
@@ -89,7 +89,7 @@ workflow SomaticVaraintDetection {
         }
 
     }
-
+# 7. Ouputs: flagstat information, bam index, Varscan vcf, Strelka vcf, Somatic Sniper vcf, Manta vcf
     output {
         Array[File] outputtumorFlagstat = processBam.tumorFlagstat
         Array[File] outputnormalFlagstat = processBam.normalFlagstat
