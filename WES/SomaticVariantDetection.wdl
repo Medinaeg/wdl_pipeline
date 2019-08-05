@@ -1,10 +1,10 @@
 version 1.0
 
-#import "./tasks/varcalling_Varscan2wdl" as Varscan
-#import "./tasks/varcalling_Strelka.wdl" as Strelka
-#import "./tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
-#import "./tasks/createSequenza.wdl" as Sequenza
-#import "./tasks/varcalling_Manta.wdl" as Manta
+# import "./tasks/varcalling_Varscan2.wdl" as Varscan
+# import "./tasks/varcalling_Strelka.wdl" as Strelka
+# import "./tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
+# import "./tasks/createSequenza.wdl" as Sequenza
+# import "./tasks/varcalling_Manta.wdl" as Manta
 
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Varscan2.wdl" as Varscan
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Strelka.wdl" as Strelka
