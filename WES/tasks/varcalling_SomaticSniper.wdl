@@ -2,12 +2,13 @@ version 1.0
 
 task runSomaticSniper {
     input {
-        File referenceFasta
-        File referenceFastaIndex
         String tumor_Sample
         File tumor_Bam
         File normal_Bam
+        Array[File] referenceFastaFiles
     }
+
+    File referenceFasta = referenceFastaFiles[0]
 
     command <<<
         /usr/local/bin/bam-somaticsniper \

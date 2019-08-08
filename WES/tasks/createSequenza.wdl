@@ -4,11 +4,12 @@ task createSequenzaFile {
     input {
         File tumorBam
         File normalBam
-        File referenceFasta
-        File referenceFastaIndex
         File gcWiggle
         String tumorSample
+        Array[File] referenceFastaFiles
     }
+
+    File referenceFasta = referenceFastaFiles[0]
 
     command <<<
         /usr/bin/sequenza-utils bam2seqz -n ~{normalBam} -t ~{tumorBam} --fasta ~{referenceFasta} -gc ~{gcWiggle} -o ~{tumorSample}.seqz.gz
