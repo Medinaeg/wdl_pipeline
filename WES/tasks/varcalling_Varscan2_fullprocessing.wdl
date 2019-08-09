@@ -116,10 +116,10 @@ task compressVCFs {
         Array[File] Varscanoutput
     }
 
-    File snpFile = Varscanoutput[12]
-    File snphcFile = Varscanoutput[11]
-    File indelFile = Varscanoutput[5]
-    File indelhcFile = Varscanoutput[4]
+    File snpFile = Varscanoutput[11]
+    File snphcFile = Varscanoutput[10]
+    File indelFile = Varscanoutput[4]
+    File indelhcFile = Varscanoutput[5]
 
     command <<<
         /usr/local/bin/bgzip -f ~{snpFile}
