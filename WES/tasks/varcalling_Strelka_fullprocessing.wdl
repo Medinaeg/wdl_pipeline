@@ -83,7 +83,7 @@ task concatVCFs {
         /usr/bin/zcat < ~{indelFile} | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > ~{tumorsample}_Strelka_gtHeader.Somatic.indels.vcf
 
         find . -name "*.vcf" -exec /usr/local/bin/bgzip -f {} \;
-        find . -name ".vcf.gz" -exec /usr/local/bin/tabix -f {} \;
+        find . -name "*.vcf.gz" -exec /usr/local/bin/tabix -f {} \;
 
         /usr/local/bin/bcftools concat -a -o ~{tumorsample}_Strelka_gtHeader_Concat.Somatic.vcf.gz -O z ~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf.gz ~{tumorsample}_Strelka_gtHeader.Somatic.indels.vcf.gz
         /usr/local/bin/tabix -f ~{tumorsample}_Strelka_gtHeader_Concat.Somatic.vcf.gz

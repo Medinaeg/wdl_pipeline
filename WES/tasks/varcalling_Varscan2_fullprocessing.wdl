@@ -126,6 +126,8 @@ task compressVCFs {
         /usr/local/bin/bgzip -f ~{snphcFile}
         /usr/local/bin/bgzip -f ~{indelFile}
         /usr/local/bin/bgzip -f ~{indelhcFile}
+        dir=$(echo ~{snpFile} | sed 's/~{tumor_sample}_Varscan.snp.Somatic.vcf//')
+        mv $dir/* .
 
         find . -name '*.vcf.gz' -exec /usr/local/bin/tabix -f {} \;
     >>>
