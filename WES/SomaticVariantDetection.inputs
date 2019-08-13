@@ -1,7 +1,6 @@
 {
-  "SomaticVaraintDetection.reference_fasta": "gs://reference-data1/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa",
-  "SomaticVaraintDetection.gcWiggle": "gs://reference-data1/Homo_sapiens.GRCh38.dna_sm.primary_assembly.wig.gz",
-  "SomaticVaraintDetection.reference_fasta_index": "gs://reference-data1/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.fai",
-  "SomaticVaraintDetection.fofn_bams_paired": "gs://acquired_resistance/FinalBams/Final_Bams_Pairs.txt"
+  "SomaticVaraintDetection.fofn_bams_paired": "/Users/egmidiomedina/cromwell/sample.txt",
+  "SomaticVaraintDetection.pathsToReferenceFastaFiles": "/Users/egmidiomedina/cromwell/paths2.txt",
+  "SomaticVaraintDetection.gcWiggle": "/Users/egmidiomedina/cromwell/Homo_sapiens.GRCh38.dna_sm.primary_assembly.wig.gz"
 }
 

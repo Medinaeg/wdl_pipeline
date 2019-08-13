@@ -1,13 +1,15 @@
 version 1.0
 
-# import "./tasks/varcalling_Varscan2.wdl" as Varscan
-# import "./tasks/varcalling_Strelka.wdl" as Strelka
+# import "./tasks/varcalling_Varscan2_fullprocessing.wdl" as Varscan
+# import "./tasks/varcalling_Strelka_fullprocessing.wdl" as Strelka
+# import "./tasks/mergeVariantCallers.wdl" as MergeVCFs
 # import "./tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 # import "./tasks/createSequenza.wdl" as Sequenza
 # import "./tasks/varcalling_Manta.wdl" as Manta
 
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Varscan2.wdl" as Varscan
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Strelka.wdl" as Strelka
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Varscan2_fullprocessing.wdl" as Varscan
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Strelka_fullprocessing.wdl" as Strelka
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/mergeVariantCallers.wdl" as MergeVCFs
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_SomaticSniper.wdl" as SomaticSniper
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/createSequenza.wdl" as Sequenza
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Manta.wdl" as Manta
@@ -15,13 +17,17 @@ import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks
 workflow SomaticVaraintDetection {
     input {
         File fofn_bams_paired
-        File reference_fasta
-        File reference_fasta_index
+        File pathsToReferenceFastaFiles
         File gcWiggle
     }
 # Prelim step: Convert fofn_bams_paired to Array for scatter
     Array[Array[String]] map_bams = read_tsv(fofn_bams_paired)
-
+# Prelim step: Get reference.fa files as bundle
+    call getReferenceFiles {
+        input:
+            pathsToReferenceFastaFiles = pathsToReferenceFastaFiles
+    }
+#
     scatter (pair in map_bams) {
         String tumorSample = pair[0]
         File tumorBam = pair[1]
@@ -35,16 +41,16 @@ workflow SomaticVaraintDetection {
                 normalSample = normalSample,
                 normalBam = normalBam
         }
+
 # 2. Run Varscan on paired tumor/normal
         call Varscan.runVarscan as Varscan {
             input:
-                reference_fasta = reference_fasta,
-                reference_fasta_index =reference_fasta_index,
                 tumor_bam = tumorBam,
                 tumor_bam_index = processBam.tumorBamIndex,
                 tumor_sample = tumorSample,
                 normal_bam = normalBam,
-                normal_bam_index = processBam.normalBamIndex
+                normal_bam_index = processBam.normalBamIndex,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 # 3. Run Strelks on paired tumor/normal
         call Strelka.runStrelka as Strelka {
@@ -54,8 +60,17 @@ workflow SomaticVaraintDetection {
                 tumorsample = tumorSample,
                 tumorbam = tumorBam,
                 tumorbamindex = processBam.tumorBamIndex,
-                referenceFasta = reference_fasta,
-                referenceFastafai = reference_fasta_index
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
+        }
+
+        call MergeVCFs.runCombineVariants as MergeVCFs {
+            input:
+                tumor_sample = tumorSample,
+                varscanFile = Varscan.finalVarscan,
+                varscanFileIndex = Varscan.finalVarscanindex,
+                strelkaFile = Strelka.finalStrelka,
+                strelkaFileIndex = Strelka.finalStrelkaindex,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 # 4. Run Somatic Sniper on paired tumor/normal
         call SomaticSniper.runSomaticSniper as SomaticSniper {
@@ -63,18 +78,16 @@ workflow SomaticVaraintDetection {
                 tumor_Sample = tumorSample,
                 tumor_Bam = tumorBam,
                 normal_Bam = normalBam,
-                referenceFasta = reference_fasta,
-                referenceFastaIndex = reference_fasta_index
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 # 5. Processes bams to Seqz file for further processing in R with sequenza package
         call Sequenza.createSequenzaFile as Sequenza {
             input:
                 tumorBam = tumorBam,
                 normalBam = normalBam,
-                referenceFasta = reference_fasta,
-                referenceFastaIndex = reference_fasta_index,
                 gcWiggle = gcWiggle,
-                tumorSample = tumorSample
+                tumorSample = tumorSample,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 # 6. Run Manta on paired tumor/normal
         call Manta.runManta as Manta {
@@ -83,9 +96,8 @@ workflow SomaticVaraintDetection {
                 normal_bamindex = processBam.normalBamIndex,
                 tumor_bam = tumorBam,
                 tumor_bamindex = processBam.tumorBamIndex,
-                reference_fasta = reference_fasta,
-                reference_fasta_index = reference_fasta_index,
-                tumor_sample = tumorSample
+                tumor_sample = tumorSample,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 
     }
@@ -94,11 +106,12 @@ workflow SomaticVaraintDetection {
         Array[File] outputtumorFlagstat = processBam.tumorFlagstat
         Array[File] outputnormalFlagstat = processBam.normalFlagstat
         Array[File] outputtumorBamIndex = processBam.tumorBamIndex
-        Array[File] outputnormalBamIndex = processBam.normalBamIndex       
-        Array[File] outputVarscansnpFiles = Varscan.snpFile
-        Array[File] outputVarscanindelFiles = Varscan.indelFile
-        Array[File] outputStrelkaindelFiles = Strelka.indelFile
-        Array[File] outputStrelkasnvFile = Strelka.snvFile
+        Array[File] outputnormalBamIndex = processBam.normalBamIndex 
+        Array[Array[File]] outputVarscanFiles = Varscan.allVarscanFiles
+        Array[File] outputStrelkasnvFiles = Strelka.outputStrelkasnvs
+        Array[File] outputStrelkaindelFiles = Strelka.outputStrelkaindels
+        Array[File] outputMergedCallers = MergeVCFs.mergevcf
+        Array[File] outputMergedCallersIndex = MergeVCFs.mergevcfindex
         Array[File] outputSomaticSniperFile = SomaticSniper.somaticsniperVariants
         Array[File] outputSequenzaFile = Sequenza.sequenzaFile
         Array[File] outputbinnedSequenzaFile = Sequenza.trimmedsequenza
@@ -108,6 +121,20 @@ workflow SomaticVaraintDetection {
         Array[File] outputcandidateSmallIndelsFile = Manta.candidateSmallIndelsFile
     }
     
+}
+
+task getReferenceFiles {
+    input {
+        File pathsToReferenceFastaFiles
+    }
+
+    command <<<
+        cut -f1 ~{pathsToReferenceFastaFiles} >> STDOUT
+    >>>
+
+    output {
+        Array[File] referenceFastaFiles = read_lines("STDOUT")
+    }
 }
 
 task processBam {
@@ -135,12 +162,12 @@ task processBam {
         File normalBamIndex = "~{normalSample}.FINAL.bam.bai"
     }
 
-    #Remove comments if running locally
-    # runtime {
-    #     docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
-    #     disks: "local-disk 100 SSD"
-    #     memory: "16G"
-    #     cpu: 1
-    # }
+#    Remove comments if running locally
+    runtime {
+        docker: "broadinstitute/genomes-in-the-cloud:2.3.1-1512499786"
+        disks: "local-disk 100 SSD"
+        memory: "16G"
+        cpu: 1
+    }
 
 }
