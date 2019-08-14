@@ -60,8 +60,8 @@ task runStrelkaCommand {
     >>>
 
     output {
-        File indelFile = "results/variants/~{tumorsample}_Strelka_gtHeader.Somatic.indels.vcf"
-        File snvFile = "results/variants/~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf"
+        File indelFile = "~{tumorsample}_Strelka_gtHeader.Somatic.indels.vcf"
+        File snvFile = "~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf"
     }
 
     runtime {
@@ -79,9 +79,12 @@ task indexVCF {
         String tumorsample
     }
 
-    command <<<
+    command <<<        
         /usr/local/bin/tabix -f ~{snvFile}
         /usr/local/bin/tabix -f ~{indelFile}
+
+        dir=$(echo ~{snvFile} | sed 's/~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf//')
+        mv $dir/* .
     >>>
 
     output {

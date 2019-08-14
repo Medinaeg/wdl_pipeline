@@ -26,7 +26,7 @@ task runManta {
     >>>
 
     output {
-        Array[File] Mantaoutput = glob("*vcf*")
+        Array[File] Mantaoutput = glob("results/variants/*vcf*")
     }
 
     runtime {
