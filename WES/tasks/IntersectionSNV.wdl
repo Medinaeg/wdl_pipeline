@@ -1,3 +1,5 @@
+version 1.0
+
 task runSelectVariant {
     input {
         File mergedVCF
