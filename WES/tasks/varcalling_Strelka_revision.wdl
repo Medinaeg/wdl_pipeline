@@ -45,14 +45,14 @@ task runStrelkaCommand {
         Array[File] referenceFastaFiles
     }
 
-    File referenceFasta = referenceFastaFiles[0]
+    File referencefasta = referenceFastaFiles[0]
 
     command <<<
         dir=$(echo ~{tumorbam} | sed 's/~{tumorsample}.FINAL.bam//')
         mv ~{tumorbamindex} $dir
         mv ~{normalbamindex} $dir
 
-        /opt/strelka/bin/configureStrelkaSomaticWorkflow.py --normalBam=~{normalbam} --tumorBam=~{tumorbam} --referenceFasta=~{referenceFasta} --exome --runDir=$PWD
+        /opt/strelka/bin/configureStrelkaSomaticWorkflow.py --normalBam=~{normalbam} --tumorBam=~{tumorbam} --referenceFasta=~{referencefasta} --exome --runDir=$PWD
         python2 $PWD/runWorkflow.py -m local -j 3 -g 10
 
         /bin/zcat < results/variants/somatic.indels.vcf.gz | awk '{if(/^##/) print; else if(/^#/) print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n"$0; else print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\tGT:"$9"\t./.:"$10"\t./.:"$11;}' - > ~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf
