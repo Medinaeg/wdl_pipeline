@@ -11,7 +11,7 @@ import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Strelka_revision.wdl" as Strelka
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/mergeVariantCallers_snvs.wdl" as MergeSNVs
 import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/mergeVariantCallers_indels.wdl" as MergeINDELs
-import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Manta.wdl" as Manta
+import "https://raw.githubusercontent.com/kcampbel/wdl_pipeline/master/WES/tasks/varcalling_Manta_revision.wdl" as Manta
 
 workflow SomaticVaraintDetection {
     input {

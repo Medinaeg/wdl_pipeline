@@ -17,7 +17,7 @@ workflow runStrelka {
             tumorsample = tumorsample,
             tumorbam = tumorbam,
             tumorbamindex = tumorbamindex,
-            referenceFasta = referenceFasta
+            referenceFastaFiles = referenceFastaFiles
     }
 
     call indexVCF {
