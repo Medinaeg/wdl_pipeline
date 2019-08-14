@@ -45,9 +45,7 @@ workflow runVarscan {
     output {
         Array[File] allVarscanFiles = VarscanCommand.Varscanoutput
         File finalVarscanSnp = VariantFilter.FilterSnpFile
-        File finalVarscanSnpindex = VariantFilter.FilterSnpFileIndex
         File finalVarscanIndel = VariantFilter.FilterIndelFile
-        File finalVarscanIndelindex = VariantFilter.FilterIndelFileIndex
     }
 }
 
@@ -167,9 +165,7 @@ task VariantFilter {
 
     output {
         File FilterSnpFile = "~{tumor_sample}_Varscan_Gatk_filtered.snp.Somatic.hc.vcf"
-        File FilterSnpFileIndex = "~{tumor_sample}_Varscan_Gatk_filtered.snp.Somatic.hc.vcf.tbi"
         File FilterIndelFile = "~{tumor_sample}_Varscan_Gatk_filtered.indel.Somatic.hc.vcf"
-        File FilterIndelFileIndex = "~{tumor_sample}_Varscan_Gatk_filtered.indel.Somatic.hc.vcf.tbi"
     }
     
     runtime {

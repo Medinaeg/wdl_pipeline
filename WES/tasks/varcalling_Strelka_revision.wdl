@@ -1,41 +1,6 @@
 version 1.0
 
-workflow runStrelka {
-    input {
-        File normalbam
-        File normalbamindex
-        String tumorsample
-        File tumorbam
-        File tumorbamindex
-        Array[File] referenceFastaFiles
-    }
-
-    call runStrelkaCommand {
-        input:
-            normalbam = normalbam,
-            normalbamindex = normalbamindex,
-            tumorsample = tumorsample,
-            tumorbam = tumorbam,
-            tumorbamindex = tumorbamindex,
-            referenceFastaFiles = referenceFastaFiles
-    }
-
-    call indexVCF {
-        input:
-            snvFile = runStrelkaCommand.snvFile,
-            indelFile = runStrelkaCommand.indelFile,
-            tumorsample = tumorsample
-    }
-
-    output {
-        File indelFile = runStrelkaCommand.indelFile
-        File indelFileIndex = indexVCF.indelStrelkaIndex
-        File snvFile = runStrelkaCommand.snvFile
-        File snvFileIndex = indexVCF.snvStrelkaIndex
-    }
-}
-
-task runStrelkaCommand {
+task runStrelka {
     input {
         File normalbam
         File normalbamindex
@@ -69,33 +34,5 @@ task runStrelkaCommand {
         disks: "local-disk 400 SSD"
         memory: "32G"
         cpu: 4
-    }
-}
-
-task indexVCF {
-    input {
-        File snvFile
-        File indelFile
-        String tumorsample
-    }
-
-    command <<<        
-        /usr/local/bin/tabix -f ~{snvFile}
-        /usr/local/bin/tabix -f ~{indelFile}
-
-        dir=$(echo ~{snvFile} | sed 's/~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf//')
-        mv $dir/* .
-    >>>
-
-    output {
-        File snvStrelkaIndex = "~{tumorsample}_Strelka_gtHeader.Somatic.snvs.vcf.tbi"
-        File indelStrelkaIndex = "~{tumorsample}_Strelka_gtHeader.Somatic.indels.vcf.tbi"
-    }
-
-    runtime {
-        docker: "dockerbiotools/bcftools"
-        disks: "local-disk 100 SSD"
-        memory: "16G"
-        cpu: 1
     }
 }

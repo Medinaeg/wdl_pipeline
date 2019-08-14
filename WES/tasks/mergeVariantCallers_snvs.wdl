@@ -4,9 +4,7 @@ task runCombineVariantsSNVs {
     input {
         String tumor_sample
         File varscanFile
-        File varscanFileIndex
         File strelkaFile
-        File strelkaFileIndex
         Array[File] referenceFastaFiles
     }
     
@@ -18,7 +16,6 @@ task runCombineVariantsSNVs {
 
     output {
         File mergevcf = "~{tumor_sample}_Varscan_Strelka_Merged_snvs.FINAL.vcf"
-        File mergevcfindex = "~{tumor_sample}_Varscan_Strelka_Merged_snvs.FINAL.vcf.tbi"
     }
 
     runtime {
