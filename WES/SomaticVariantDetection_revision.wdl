@@ -17,7 +17,6 @@ workflow SomaticVaraintDetection {
     input {
         File fofn_bams_paired
         File pathsToReferenceFastaFiles
-        File gcWiggle
     }
 # Prelim step: Convert fofn_bams_paired to Array for scatter
     Array[Array[String]] map_bams = read_tsv(fofn_bams_paired)
@@ -68,8 +67,8 @@ workflow SomaticVaraintDetection {
                 varscanFile = Varscan.finalVarscanSnp,
                 varscanFileIndex = Varscan.finalVarscanSnpindex,
                 strelkaFile = Strelka.snvFile,
-                strelkaFileIndex = Strelka.snvFileIndex
-
+                strelkaFileIndex = Strelka.snvFileIndex,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles
         }
 
         call MergeINDELs.runCombineVariantsINDELs as MergeINDELs {
@@ -78,7 +77,8 @@ workflow SomaticVaraintDetection {
                 varscanFile = Varscan.finalVarscanIndel,
                 varscanFileIndex = Varscan.finalVarscanIndelindex,
                 strelkaFile = Strelka.indelFile,
-                strelkaFileIndex = Strelka.indelFileIndex          
+                strelkaFileIndex = Strelka.indelFileIndex,
+                referenceFastaFiles = getReferenceFiles.referenceFastaFiles         
         }
 
 # 6. Run Manta on paired tumor/normal
